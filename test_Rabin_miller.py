@@ -18,16 +18,12 @@ def rabin_miller(n, k=20):
     while d % 2 == 0:
         r += 1
         d //= 2
-    print("d: ", d)
-    print("r: ", r)
-    print("n-1 : ", n-1)
-    print(n-1, "  =  ", 2 , "^" , r, " * " , d)
+  
     # Étape 2 : Effectuer k tests
     for _ in range(k):
         a = random.randint(2, n - 2)  # Choisir un témoin aléatoire
-        print("a: ", a)
         x = pow(a, d, n)  # Calcul de a^d % n (pow(base, exp, mod))
-        print("x: ", x)
+
         if x == 1 or x == n - 1:  # Passe le test immédiatement
             continue
 
@@ -40,5 +36,3 @@ def rabin_miller(n, k=20):
             return False  # Si aucune puissance n'atteint n - 1, n n'est pas premier
 
     return True  # Si tous les tests passent, n est probablement premier
-n =2147483647
-print(rabin_miller(n,k=20))

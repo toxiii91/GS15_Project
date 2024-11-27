@@ -183,14 +183,14 @@ def creer_compte():
 
 
 def menu_principal():
-    """Affiche le menu principal du programme."""
+    """Affiche le menu principal du program"""
     while True:
         print("Bienvenue dans le coffre-fort numérique !")
         print("1. Créer un compte")
         print("2. Quitter")
         print("3. Vérifier une clé publique avec une preuve à divulgation nulle")
         choix = input("Choisissez une option : ")
-
+ #blabla
         if choix == "1":
             creer_compte()
         elif choix == "2":

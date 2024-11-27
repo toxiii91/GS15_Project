@@ -1,0 +1,36 @@
+def guillou_quisquater_prove(n, e, d, H):
+    """Nicolas prouve qu'il connaît d sans le révéler."""
+    r = random.randint(1, n-1)
+    M = pow(r, e, n)  # M = r^e % n
+    print(f"M envoyé à Rémi : {M}")
+
+Rémi envoie un défi
+    c = random.randint(1, n-1)
+    print(f"Défi reçu de Rémi : {c}")
+
+Nicolas calcule la preuve
+    S = pow(H, d, n)  # Signature avec la clé privée
+    preuve = (r * pow(S, c, n)) % n  # Preuve = r * S^c % n
+    print(f"Preuve calculée par Nicolas : {preuve}")
+
+    return M, c, preuve
+
+def guillou_quisquater_verify(n, e, H, M, c, preuve):
+    """Rémi vérifie la preuve."""
+    left = pow(preuve, e, n)  # Preuve^e % n
+    right = (M * pow(H, c, n)) % n  # M * H^c % n
+    print(f"Vérification : {left} == {right}")
+    return left == right
+
+Exemple de test
+n = 77  # n = p*q
+e = 7   # Exposant public
+d = 43  # Exposant privé (calculé via phi(n))
+H = 12  # Hash d'un message
+
+Nicolas prouve
+M, c, preuve = guillou_quisquater_prove(n, e, d, H)
+
+Rémi vérifie
+result = guillou_quisquater_verify(n, e, H, M, c, preuve)
+print("Résultat de la vérification :", "Succès" if result else "Échec")

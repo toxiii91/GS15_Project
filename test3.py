@@ -50,30 +50,29 @@ def prouveur():
 
     # Génération d'un B aléatoire premier avec n_prouv
     B = generer_premier(n_prouv)
-    e = verificateur(2, 0, 0, 0, 0) # récupération de e auprès du vérificateur
-
+    v = generer_premier(n_prouv)
     # print("B: ",B)
 
     # Calcul de J
     J = pow(B, -1, n_prouv)  # Calcul de l'inverse de B mod n
-    J = pow(J, e, n_prouv)   # J = (B^-1)^e mod n
+    J = pow(J, v, n_prouv)   # J = (B^-1)^e mod n
     #print("J: ", J)
 
     # Génération d'un r aléatoire tel que r ∈ {1, 2, ..., n_prouv − 1}
     r = random.randint(1, n_prouv - 1)  # Choisir r dans [1, n_prouv - 1]
 
     # Calcul de T
-    T = pow(r, e, n_prouv)
+    T = pow(r, v, n_prouv)
 
     # Alice envoie T à Bob
-    d = verificateur(0, T, 0, J, e)
+    d = verificateur(0, T, 0, J, v)
 
     # Calcul de t
     t = (r * pow(B, d, n_prouv)) % n_prouv
     #print("t: ", t)
 
     # Alice envoie t
-    value = verificateur(1, 0, t, J, e)
+    value = verificateur(1, 0, t, J, v)
 
     if value == 0:
         print('\n Valid \n')
@@ -113,9 +112,7 @@ def verificateur(i, T, t, J, v):
         if P == T_n:
             return 0  # Validation réussie
         else:
-            return 1  # Échec de la validation 
-    elif i == 2:  # Bob envoie e
-        return e     
+            return 1  # Échec de la validation       
 
 
 def ZKP():

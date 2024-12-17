@@ -1,5 +1,23 @@
 from test_Rabin_miller import rabin_miller
-import tools_crypto
+import random
+
+def Euclide_etendu(a, b):
+        if b == 0:
+            return a, 1, 0
+        pgcd, x1, y1 = Euclide_etendu(b, a % b)
+        x = y1
+        y = x1 - (a // b) * y1
+        return pgcd, x, y
+
+# Calcul de l'inverse modulaire (Algorithme d'Euclide étendu)
+
+def generer_nombre_premier(bits):
+    """Génère un grand nombre premier de 'bits' bits."""
+    while True:
+        nombre_candidat = random.getrandbits(bits) | (1 << bits - 1) | 1  # Assure que le nombre est impair et de taille correcte
+        if rabin_miller(nombre_candidat):
+            return nombre_candidat
+        
 
 # Fonction de génération d'un hash rudimentaire
 def simple_hash_long(data, output_size=1024):
@@ -33,13 +51,23 @@ def KDF(mdp, phi):
         d += 1
     return d
 
+
+# Calcul de l'inverse modulaire
+def mod_inverse(a, m):
+    m0, x0, x1 = m, 0, 1
+    while a > 1:
+        q = a // m
+        a, m = m, a % m
+        x0, x1 = x1 - q * x0, x0
+    return x1 + m0 if x1 < 0 else x1
+
 # Fonction principale pour générer un couple de clés publique/privée
 def generer_couple_cles(mdp):
     """Génère une paire de clés RSA (publique et privée) d'au moins 1024 bits."""
     # Étape 1 : Générer deux grands nombres premiers p et q
-    p = tools_crypto.generer_nombre_premier(512)
+    p = generer_nombre_premier(512)
     
-    q = tools_crypto.generer_nombre_premier(512)
+    q = generer_nombre_premier(512)
     
     
     # Étape 2 : Calculer n et phi(n)
@@ -51,7 +79,7 @@ def generer_couple_cles(mdp):
     d = KDF(mdp, phi)
     
     # Étape 4 : Calculer e, l'inverse modulaire de d
-    e = tools_crypto.mod_inverse(d, phi)
+    e = mod_inverse(d, phi)
     
     # Retourner les clés publique (n, e) et privée (n, d)
     return (n, e), (n, d)

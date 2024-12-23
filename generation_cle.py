@@ -45,7 +45,6 @@ def generer_couple_cles(mdp):
     # Étape 2 : Calculer n et phi(n)
     n = p * q
     phi = (p - 1) * (q - 1)
-    print('\nphi(n):', phi)
     
     # Étape 3 : Utiliser KDF pour dériver d à partir du mot de passe
     d = KDF(mdp, phi)

@@ -216,13 +216,13 @@ def test_message_encryption():
 
     if choix == "message":
         message = input("Entrez votre message : ")
-        print("Message original :", message)
+        #print("Message original :", message)
     elif choix == "fichier":
         chemin_fichier = input("Entrez le chemin du fichier : ").strip()
         try:
             with open(chemin_fichier, 'r', encoding='utf-8') as fichier:
                 message = fichier.read()
-                print(f"Contenu du fichier lu :\n{message}")
+                #print(f"Contenu du fichier lu :\n{message}")
         except FileNotFoundError:
             print("Erreur : fichier non trouvé.")
             return
@@ -251,6 +251,6 @@ def test_message_encryption():
 
 
 
-if __name__ == "__main__":
-    test_message_encryption()
+#if __name__ == "__main__":
+ #   test_message_encryption()
 

@@ -1,5 +1,5 @@
 import random
-
+from cobra_test import test_message_encryption
 def diffie_hellman():
     # Le client et le coffre fort se mettent d'accord sur deux paramètres publiques p (un très grand nombre premier) et
     # g (un générateur appartenant à Zp premier), g<p et sont transmis en clair
@@ -16,7 +16,22 @@ def diffie_hellman():
     g = 2
 
     User(p, g)
-    print("Connexion établie")
+    print("La connexion est établie. La clé de session est créee !")
+    print("Que souhaitez-vous faire maintenant : ")
+
+    while True:
+        print("1. Retourner au menu principal")
+        print("2. Utiliser Cobra pour chiffrer")
+        choix = input("Choisissez une option : ")
+
+        if choix == "1":
+            print('\n Au revoir ! \n')
+            break
+        elif choix == "2":
+            test_message_encryption()            
+        else:
+            print("Option invalide, veuillez réessayer.")
+
 
 
 def User(p, g):

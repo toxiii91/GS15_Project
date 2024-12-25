@@ -1,6 +1,7 @@
 import random
+import os
 from cobra_test import test_message_encryption
-def diffie_hellman():
+def diffie_hellman(username):
     # Le client et le coffre fort se mettent d'accord sur deux paramètres publiques p (un très grand nombre premier) et
     # g (un générateur appartenant à Zp premier), g<p et sont transmis en clair
     # Voir les recommandations RFC3526
@@ -15,7 +16,7 @@ def diffie_hellman():
     p = int(hexa, 16)  # hexa to dec
     g = 2
 
-    User(p, g)
+    User(p, g, username)
     print("La connexion est établie. La clé de session est créee !")
     print("Que souhaitez-vous faire maintenant : ")
 
@@ -28,47 +29,63 @@ def diffie_hellman():
             print('\n Au revoir ! \n')
             break
         elif choix == "2":
-            test_message_encryption()            
+            test_message_encryption(username)            
         else:
             print("Option invalide, veuillez réessayer.")
 
-
-
-def User(p, g):
-    # Clés privées aléatoires du client et du coffre
+def User(p, g, username):
+    """
+    Génère la clé secrète côté utilisateur et la stocke dans 'coffre_fort/<username>'.
+    """
+    # Clés privées aléatoires de l'utilisateur
     a = random.randint(2, p - 1)
     A = pow(g, a, p)
+
     # Envoie de A à Coffre, et on reçoit B
-    B = Coffre(p, g, A)
+    B = Coffre(p, g, A, username)
 
     # Reçoit B, on peut alors calculer la clé secrète ka
     ka = pow(B, a, p)
 
-    # Réduction de la clé à 256 bits en utilisant une simple troncature
+    # Réduction de la clé à 256 bits
     ka_binary = bin(ka)[2:]  # Convertir en binaire sans le préfixe '0b'
     ka_256_bit = ka_binary[:256]  # Garder seulement les 256 premiers bits
     ka_final = int(ka_256_bit, 2)  # Reconversion en entier
 
-    with open("ka.key", "w") as f:
-        # Sauvegarder la clé privée tronquée
+    chemin_dossier = os.path.join("users", username)
+
+    # Sauvegarder la clé dans le fichier dans le repertoire de l'user côté client
+    chemin_fichier = os.path.join(chemin_dossier, "keya.key")
+    with open(chemin_fichier, "w") as f:
         f.write(f"{ka_final}\n")
 
+    print(f"Clé utilisateur sauvegardée dans {chemin_fichier}.")
 
-def Coffre(p, g, A):
+
+def Coffre(p, g, A, username):
+    """
+    Génère la clé secrète côté coffre et la stocke dans 'users/<username>'.
+    """
+    # Clés privées aléatoires du coffre
     b = random.randint(2, p - 1)
     B = pow(g, b, p)
-    # Envoie de B à Alice  
 
     # Reçoit A, on peut alors calculer la clé secrète kb
     kb = pow(A, b, p)
 
-    # Réduction de la clé à 256 bits en utilisant une simple troncature
+    # Réduction de la clé à 256 bits
     kb_binary = bin(kb)[2:]  # Convertir en binaire sans le préfixe '0b'
     kb_256_bit = kb_binary[:256]  # Garder seulement les 256 premiers bits
     kb_final = int(kb_256_bit, 2)  # Reconversion en entier
 
-    with open("kb.key", "w") as f:
-        # Sauvegarder la clé privée tronquée
+    chemin_dossier = os.path.join("coffre_fort", username)
+
+    # Sauvegarder la clé dans le fichier
+    chemin_fichier = os.path.join(chemin_dossier, "keyb.key")
+    with open(chemin_fichier, "w") as f:
         f.write(f"{kb_final}\n")
 
+    print(f"Clé coffre sauvegardée dans {chemin_fichier}.")
+
     return B
+

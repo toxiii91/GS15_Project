@@ -16,7 +16,24 @@ def menu_principal():
         if choix == "1":
             creer_compte()
         elif choix == "2":
-            print("Se connecter ...")
+            username = input("Entrer votre nom d'utilisateur : ")
+            connexion = ZKP(username)
+            if connexion:
+                while True:
+                    print("Connexion réussie, Que voulez vous faire maintenant")
+                    print("1. Créer une clé de session avec le coffre")
+                    print("2. Quitter")
+                    choix = input("Choisissez une option : ")
+                    if choix == "1":
+                        diffie_hellman(username)
+                    elif choix == "2":
+                        break
+                    else:
+                        print("Option invalide, veuillez réessayer.")
+
+            else:
+                print("Connexion échouée")
+
             """Ajout de la fonction de connection"""
         elif choix == "3":
             print('\n Au revoir ! \n')

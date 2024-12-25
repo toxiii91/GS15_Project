@@ -1,6 +1,7 @@
 import random
 import os
 from math import gcd
+import shutil
 
 # Constantes
 PHI = 0x9E3779B9  # Nombre parfait φ
@@ -201,14 +202,17 @@ def cobra_decrypt_message(encrypted_message, round_keys):
         raise ValueError("Padding invalide détecté lors du déchiffrement.")
     return decrypted[:-padding_len].decode('utf-8')
 
-def test_message_encryption():
-    # Lire la valeur depuis le fichier keya.key
-    with open("ka.key", "r") as file:
-        cle = int(file.read().strip())
+def test_message_encryption(username):
+    # Lire la valeur depuis la clé de session stocké côté user (côté client)
+
+    chemin_dossier_client = os.path.join("users", username)
+    chemin_dossier_coffre = os.path.join("coffre_fort", username)
+    # Sauvegarder la clé dans le fichier dans le repertoire de l'user côté client
+    chemin_fichier = os.path.join(chemin_dossier_client, "keya.key")
+    with open(chemin_fichier, "r") as f:
+        cle = int(f.read().strip())
     # Exemple de cle :
-    #cle = 100445156305570974570356492135343841834120997605681207272792561635472097760818
     cle_initiale_dh = key_to_binary(cle)
-    #cle_initiale_dh = "11011010101101001010101101101010101010101010101010101010101010101111"
     round_keys = generate_keys(cle_initiale_dh)
 
     #Entrer un message ou un fichier
@@ -233,21 +237,61 @@ def test_message_encryption():
         print("Choix invalide. Veuillez choisir 'message' ou 'fichier'.")
         return
 
+    
     # Chiffrement
     encrypted = cobra_encrypt_message(message, round_keys)
+    nom_fichier = os.path.basename(chemin_fichier)  # Récupère le nom du fichier sans le chemin
+    nom_fichier_encrypte = nom_fichier.split('.')[0] + '_encrypte.txt'  # Ajoute _encrypte.txt au nom
+    chemin_fichier_encrypte = os.path.join(chemin_dossier_client, nom_fichier_encrypte)
     # print("\nMessage chiffré (hexadécimal) :", encrypted.hex())
     # Décommenter si on souhaite ecrire le message chiffre dans un nouveau fichier
     encrypted_hex = encrypted.hex()
-    write_to_file("encrypted_message.txt", encrypted_hex)
+    write_to_file(chemin_fichier_encrypte, encrypted_hex)
 
-    # Déchiffrement
-    try:
-        decrypted = cobra_decrypt_message(encrypted, round_keys)
-        # print("\nMessage déchiffré :", decrypted)
-        # Décommenter si on souhaite ecrire le message chiffre dans un nouveau fichier
-        write_to_file("decrypted_message.txt", decrypted)
-    except Exception as e:
-        print("\nErreur lors du déchiffrement :", str(e))
+    print("Chiffrement du fichier réussi, voulez vous le rediriger vers le coffre")
+    print("1. Oui")
+    print("2. Non")
+    choix = input("Choisissez une option : ")
+    if choix == "1":
+        # envoyer le fichier sur le coffre 
+        chemin_source = chemin_fichier_encrypte
+        chemin_destination = os.path.join(chemin_dossier_coffre, nom_fichier)
+        # Déplacer le fichier
+        try:
+            shutil.move(chemin_source, chemin_destination)
+            print(f"Le fichier a été déplacé vers {chemin_destination}")
+        except FileNotFoundError:
+            print("Erreur : Le fichier source n'a pas été trouvé.")
+        except PermissionError:
+            print("Erreur : Vous n'avez pas les permissions nécessaires pour déplacer ce fichier.")
+        except Exception as e:
+            print(f"Erreur lors du déplacement du fichier : {e}")
+        # demander si on veut le déchiffrer
+
+        print("Le fichier a été deplacé avec succès. Voulez vous le déchiffré")
+        print("1. Oui")
+        print("2. Non")
+        choix = input("Choisissez une option : ")
+        # Déchiffrement
+        if choix == "1":
+            try:
+                decrypted = cobra_decrypt_message(encrypted, round_keys)
+                # print("\nMessage déchiffré :", decrypted)
+                # Décommenter si on souhaite ecrire le message chiffre dans un nouveau fichier
+                write_to_file(chemin_destination, decrypted)
+            except Exception as e:
+                print("\nErreur lors du déchiffrement :", str(e))
+        elif choix == "2":
+            print("ne rien faire")
+        else:
+            print("Option invalide, veuillez réessayer.")
+    elif choix == "2":
+        print("ne rien faire")
+    else:
+        print("Option invalide, veuillez réessayer.")
+
+
+    
 
 
 

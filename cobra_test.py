@@ -208,8 +208,8 @@ def test_message_encryption(username):
     chemin_dossier_client = os.path.join("users", username)
     chemin_dossier_coffre = os.path.join("coffre_fort", username)
     # Sauvegarder la clé dans le fichier dans le repertoire de l'user côté client
-    chemin_fichier = os.path.join(chemin_dossier_client, "keya.key")
-    with open(chemin_fichier, "r") as f:
+    chemin_cle = os.path.join(chemin_dossier_client, "keya.key")
+    with open(chemin_cle, "r") as f:
         cle = int(f.read().strip())
     # Exemple de cle :
     cle_initiale_dh = key_to_binary(cle)
@@ -222,7 +222,10 @@ def test_message_encryption(username):
         message = input("Entrez votre message : ")
         #print("Message original :", message)
     elif choix == "fichier":
-        chemin_fichier = input("Entrez le chemin du fichier : ").strip()
+        nom_chemin_fichier = input("Entrez le chemin du fichier à partir de votre répertoire dans /users: ").strip()
+        chemin_fichier = os.path.join(chemin_dossier_client,nom_chemin_fichier) 
+        #chemin_fichier = os.path.join(chemin_fichier, nom_chemin_fichier) 
+        print("Le chemin : ",chemin_fichier)
         try:
             with open(chemin_fichier, 'r', encoding='utf-8') as fichier:
                 message = fichier.read()
@@ -241,20 +244,18 @@ def test_message_encryption(username):
     # Chiffrement
     encrypted = cobra_encrypt_message(message, round_keys)
     nom_fichier = os.path.basename(chemin_fichier)  # Récupère le nom du fichier sans le chemin
-    nom_fichier_encrypte = nom_fichier.split('.')[0] + '_encrypte.txt'  # Ajoute _encrypte.txt au nom
-    chemin_fichier_encrypte = os.path.join(chemin_dossier_client, nom_fichier_encrypte)
+    #nom_fichier_encrypte = nom_fichier.split('.')[0] + '_encrypte.txt'  # Ajoute _encrypte.txt au nom
+    #chemin_fichier_encrypte = os.path.join(chemin_dossier_client, nom_fichier_encrypte)
     # print("\nMessage chiffré (hexadécimal) :", encrypted.hex())
     # Décommenter si on souhaite ecrire le message chiffre dans un nouveau fichier
     encrypted_hex = encrypted.hex()
-    write_to_file(chemin_fichier_encrypte, encrypted_hex)
+    write_to_file(chemin_fichier, encrypted_hex)
 
-    print("Chiffrement du fichier réussi, voulez vous le rediriger vers le coffre")
-    print("1. Oui")
-    print("2. Non")
-    choix = input("Choisissez une option : ")
+    print("Chiffrement du fichier réussi, taper 1 pour confirmer sa redirection vers le coffre")
+    choix = input("Taper 1 pour valider : ")
     if choix == "1":
         # envoyer le fichier sur le coffre 
-        chemin_source = chemin_fichier_encrypte
+        chemin_source = chemin_fichier
         chemin_destination = os.path.join(chemin_dossier_coffre, nom_fichier)
         # Déplacer le fichier
         try:
@@ -268,10 +269,8 @@ def test_message_encryption(username):
             print(f"Erreur lors du déplacement du fichier : {e}")
         # demander si on veut le déchiffrer
 
-        print("Le fichier a été deplacé avec succès. Voulez vous le déchiffré")
-        print("1. Oui")
-        print("2. Non")
-        choix = input("Choisissez une option : ")
+        print("Le fichier a été deplacé avec succès. Taper 1 pour confirmer le déchiffrement")
+        choix = input("Taper 1 : ")
         # Déchiffrement
         if choix == "1":
             try:
@@ -279,14 +278,12 @@ def test_message_encryption(username):
                 # print("\nMessage déchiffré :", decrypted)
                 # Décommenter si on souhaite ecrire le message chiffre dans un nouveau fichier
                 write_to_file(chemin_destination, decrypted)
+                print("Le fichier a été déchiffré avec succès.")
+                print('\nQue voulez-vous faire maintenant ?')
             except Exception as e:
                 print("\nErreur lors du déchiffrement :", str(e))
-        elif choix == "2":
-            print("ne rien faire")
         else:
             print("Option invalide, veuillez réessayer.")
-    elif choix == "2":
-        print("ne rien faire")
     else:
         print("Option invalide, veuillez réessayer.")
 

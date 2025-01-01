@@ -202,96 +202,136 @@ def cobra_decrypt_message(encrypted_message, round_keys):
         raise ValueError("Padding invalide détecté lors du déchiffrement.")
     return decrypted[:-padding_len].decode('utf-8')
 
-def test_message_encryption(username):
-    # Lire la valeur depuis la clé de session stocké côté user (côté client)
+import os
+import shutil
 
+def lire_cle_utilisateur(username):
+    chemin_cle = os.path.join("users", username, "keya.key")
+    try:
+        with open(chemin_cle, "r") as f:
+            return int(f.read().strip())
+    except FileNotFoundError:
+        print("Erreur : Fichier de clé introuvable.")
+        return None
+    except ValueError:
+        print("Erreur : La clé est invalide.")
+        return None
+
+def obtenir_chemin_fichier(base_dossier, message):
+    nom_fichier = input(message).strip()
+    chemin_fichier = os.path.join(base_dossier, nom_fichier)
+    if not os.path.isfile(chemin_fichier):
+        print("Erreur : Le fichier spécifié n'existe pas.")
+        return None
+    return chemin_fichier
+
+def ecrire_fichier(chemin, contenu):
+    try:
+        with open(chemin, 'w', encoding='utf-8') as f:
+            f.write(contenu)
+    except Exception as e:
+        print(f"Erreur lors de l'écriture dans le fichier : {e}")
+
+def deplacer_fichier(chemin_source, chemin_destination):
+    try:
+        shutil.move(chemin_source, chemin_destination)
+        print(f"Le fichier a été déplacé avec succès vers {chemin_destination}.")
+        return True
+    except Exception as e:
+        print(f"Erreur lors du déplacement du fichier : {e}")
+        return False
+
+def traiter_message(message, round_keys):
+    try:
+        encrypted = cobra_encrypt_message(message, round_keys)
+        decrypted = cobra_decrypt_message(encrypted, round_keys)
+        return encrypted.hex(), decrypted
+    except Exception as e:
+        print(f"Erreur lors du traitement du message : {e}")
+        return None, None
+
+def test_message_encryption(username):
     chemin_dossier_client = os.path.join("users", username)
     chemin_dossier_coffre = os.path.join("coffre_fort", username)
-    # Sauvegarder la clé dans le fichier dans le repertoire de l'user côté client
-    chemin_cle = os.path.join(chemin_dossier_client, "keya.key")
-    with open(chemin_cle, "r") as f:
-        cle = int(f.read().strip())
-    # Exemple de cle :
+    cle = lire_cle_utilisateur(username)
+    if cle is None:
+        return
+
     cle_initiale_dh = key_to_binary(cle)
     round_keys = generate_keys(cle_initiale_dh)
 
-    #Entrer un message ou un fichier
-    choix = input("Voulez-vous entrer un message ou un fichier ? (message/fichier) : ").strip().lower()
+    choix = input("Que voulez-vous faire ?\n"
+                  "1) Tester Cobra avec un message\n"
+                  "2) Déposer un fichier dans le coffre\n"
+                  "3) Récupérer un fichier du coffre\n").strip()
 
-    if choix == "message":
+    if choix == "1":
         message = input("Entrez votre message : ")
-        #print("Message original :", message)
-    elif choix == "fichier":
-        nom_chemin_fichier = input("Entrez le chemin du fichier à partir de votre répertoire dans /users: ").strip()
-        chemin_fichier = os.path.join(chemin_dossier_client,nom_chemin_fichier) 
-        #chemin_fichier = os.path.join(chemin_fichier, nom_chemin_fichier) 
-        print("Le chemin : ",chemin_fichier)
+        encrypted_hex, decrypted = traiter_message(message, round_keys)
+        if encrypted_hex:
+            print("Message chiffré :", encrypted_hex)
+            print("Message déchiffré :", decrypted)
+
+    elif choix == "2":
+        chemin_fichier = obtenir_chemin_fichier(chemin_dossier_client, 
+                                                "Entrez le chemin du fichier dans votre répertoire : ")
+        if not chemin_fichier:
+            return
+
         try:
             with open(chemin_fichier, 'r', encoding='utf-8') as fichier:
-                message = fichier.read()
-                #print(f"Contenu du fichier lu :\n{message}")
-        except FileNotFoundError:
-            print("Erreur : fichier non trouvé.")
-            return
+                contenu = fichier.read()
+            encrypted_hex, decrypted = traiter_message(contenu, round_keys)
+            if not encrypted_hex:
+                return
         except Exception as e:
             print(f"Erreur lors de la lecture du fichier : {e}")
             return
-    else:
-        print("Choix invalide. Veuillez choisir 'message' ou 'fichier'.")
-        return
 
-    
-    # Chiffrement
-    encrypted = cobra_encrypt_message(message, round_keys)
-    nom_fichier = os.path.basename(chemin_fichier)  # Récupère le nom du fichier sans le chemin
-    #nom_fichier_encrypte = nom_fichier.split('.')[0] + '_encrypte.txt'  # Ajoute _encrypte.txt au nom
-    #chemin_fichier_encrypte = os.path.join(chemin_dossier_client, nom_fichier_encrypte)
-    # print("\nMessage chiffré (hexadécimal) :", encrypted.hex())
-    # Décommenter si on souhaite ecrire le message chiffre dans un nouveau fichier
-    encrypted_hex = encrypted.hex()
-    write_to_file(chemin_fichier, encrypted_hex)
+        ecrire_fichier(chemin_fichier, encrypted_hex)
+        print("Fichier chiffré avec succès.")
+        
+        confirmation = input("Confirmez-vous le déplacement dans le coffre ? (1 pour oui) : ").strip()
+        if confirmation != "1":
+            print("Opération annulée.")
+            return
 
-    print("Chiffrement du fichier réussi, taper 1 pour confirmer sa redirection vers le coffre")
-    choix = input("Taper 1 pour valider : ")
-    if choix == "1":
-        # envoyer le fichier sur le coffre 
-        chemin_source = chemin_fichier
-        chemin_destination = os.path.join(chemin_dossier_coffre, nom_fichier)
-        # Déplacer le fichier
+        chemin_destination = os.path.join(chemin_dossier_coffre, os.path.basename(chemin_fichier))
+        if deplacer_fichier(chemin_fichier, chemin_destination):
+            confirmation = input("Confirmez-vous le déchiffrement du fichier ? (1 pour oui) : ").strip()
+            if confirmation == "1":
+                ecrire_fichier(chemin_destination, decrypted)
+                print("Fichier déchiffré avec succès.")
+
+    elif choix == "3":
+        chemin_fichier = obtenir_chemin_fichier(chemin_dossier_coffre, 
+                                                "Entrez le chemin du fichier dans le coffre : ")
+        if not chemin_fichier:
+            return
+
         try:
-            shutil.move(chemin_source, chemin_destination)
-            print(f"Le fichier a été déplacé vers {chemin_destination}")
-        except FileNotFoundError:
-            print("Erreur : Le fichier source n'a pas été trouvé.")
-        except PermissionError:
-            print("Erreur : Vous n'avez pas les permissions nécessaires pour déplacer ce fichier.")
+            with open(chemin_fichier, 'r', encoding='utf-8') as fichier:
+                contenu = fichier.read()
+            encrypted_hex, decrypted = traiter_message(contenu, round_keys)
+            if not encrypted_hex:
+                return
         except Exception as e:
-            print(f"Erreur lors du déplacement du fichier : {e}")
-        # demander si on veut le déchiffrer
+            print(f"Erreur lors de la lecture du fichier : {e}")
+            return
 
-        print("Le fichier a été deplacé avec succès. Taper 1 pour confirmer le déchiffrement")
-        choix = input("Taper 1 : ")
-        # Déchiffrement
-        if choix == "1":
-            try:
-                decrypted = cobra_decrypt_message(encrypted, round_keys)
-                # print("\nMessage déchiffré :", decrypted)
-                # Décommenter si on souhaite ecrire le message chiffre dans un nouveau fichier
-                write_to_file(chemin_destination, decrypted)
-                print("Le fichier a été déchiffré avec succès.")
-                print('\nQue voulez-vous faire maintenant ?')
-            except Exception as e:
-                print("\nErreur lors du déchiffrement :", str(e))
-        else:
-            print("Option invalide, veuillez réessayer.")
+        ecrire_fichier(chemin_fichier, encrypted_hex)
+        print("Fichier chiffré avec succès.")
+        
+        confirmation = input("Confirmez-vous le déplacement dans votre répertoire personnel ? (1 pour oui) : ").strip()
+        if confirmation != "1":
+            print("Opération annulée.")
+            return
+
+        chemin_destination = os.path.join(chemin_dossier_client, os.path.basename(chemin_fichier))
+        if deplacer_fichier(chemin_fichier, chemin_destination):
+            confirmation = input("Confirmez-vous le déchiffrement du fichier ? (1 pour oui) : ").strip()
+            if confirmation == "1":
+                ecrire_fichier(chemin_destination, decrypted)
+                print("Fichier déchiffré avec succès.")
     else:
-        print("Option invalide, veuillez réessayer.")
-
-
-    
-
-
-
-#if __name__ == "__main__":
- #   test_message_encryption()
-
+        print("Option invalide.")

@@ -1,7 +1,7 @@
-import random
 import os
 from math import gcd
 import shutil
+from log import ecrire_log
 
 # Constantes
 PHI = 0x9E3779B9  # Nombre parfait φ
@@ -250,7 +250,7 @@ def traiter_message(message, round_keys):
         print(f"Erreur lors du traitement du message : {e}")
         return None, None
 
-def test_message_encryption(username):
+def message_encryption(username):
     chemin_dossier_client = os.path.join("users", username)
     chemin_dossier_coffre = os.path.join("coffre_fort", username)
     cle = lire_cle_utilisateur(username)
@@ -271,6 +271,7 @@ def test_message_encryption(username):
         if encrypted_hex:
             print("Message chiffré :", encrypted_hex)
             print("Message déchiffré :", decrypted)
+            ecrire_log("cobra_message", username)
 
     elif choix == "2":
         chemin_fichier = obtenir_chemin_fichier(chemin_dossier_client, 
@@ -302,6 +303,8 @@ def test_message_encryption(username):
             if confirmation == "1":
                 ecrire_fichier(chemin_destination, decrypted)
                 print("Fichier déchiffré avec succès.")
+                ecrire_log("depot_fichier", username, chemin_fichier)
+
 
     elif choix == "3":
         chemin_fichier = obtenir_chemin_fichier(chemin_dossier_coffre, 
@@ -332,6 +335,6 @@ def test_message_encryption(username):
             confirmation = input("Confirmez-vous le déchiffrement du fichier ? (1 pour oui) : ").strip()
             if confirmation == "1":
                 ecrire_fichier(chemin_destination, decrypted)
-                print("Fichier déchiffré avec succès.")
+                ecrire_log("recuperation_fichier", username, chemin_fichier)
     else:
         print("Option invalide.")

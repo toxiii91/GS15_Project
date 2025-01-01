@@ -1,6 +1,7 @@
 from Guillou_Quisquater import ZKP
 from generation_cle import creer_compte  
 from Diffie_Hellman import diffie_hellman
+from log import ecrire_log
 
 def menu_principal():
     """Affiche le menu principal du program"""
@@ -17,7 +18,9 @@ def menu_principal():
             creer_compte()
         elif choix == "2":
             username = input("Entrer votre nom d'utilisateur : ")
+            # Verif certificat
             connexion = ZKP(username)
+            ecrire_log("zkp", username)
             if connexion:
                 while True:
                     print("Connexion réussie, Que voulez vous faire maintenant")

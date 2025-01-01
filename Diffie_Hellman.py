@@ -1,6 +1,8 @@
 import random
 import os
-from cobra_test import test_message_encryption
+from cobra import message_encryption
+from log import ecrire_log
+
 def diffie_hellman(username):
     # Le client et le coffre fort se mettent d'accord sur deux paramètres publiques p (un très grand nombre premier) et
     # g (un générateur appartenant à Zp premier), g<p et sont transmis en clair
@@ -15,9 +17,9 @@ def diffie_hellman(username):
     )
     p = int(hexa, 16)  # hexa to dec
     g = 2
-
     User(p, g, username)
     print("La connexion est établie. La clé de session est créee !")
+    ecrire_log("connexion_utilisateur", username)
     print("Que souhaitez-vous faire maintenant : ")
 
     while True:
@@ -26,10 +28,39 @@ def diffie_hellman(username):
         choix = input("Choisissez une option : ")
 
         if choix == "1":
+            chemin_user = os.path.join("users", username)
+            chemin_cle_session_user = os.path.join(chemin_user, "keya.key")
+            chemin_coffre = os.path.join("coffre_fort", username)
+            chemin_cle_session_coffre = os.path.join(chemin_coffre, "keyb.key")
             print('\n Au revoir ! \n')
+            # supprimer les clés
+            try:
+                # Vérifie si le fichier existe
+                if os.path.exists(chemin_cle_session_user):
+                    os.remove(chemin_cle_session_user)  # Supprime le fichier
+                    print(f"Fichier supprimé avec succès : {chemin_cle_session_user}")
+                    ecrire_log("supprimer_cle_session_utilisateur", username)
+                    # Ajout du log
+                else:
+                    print(f"Le fichier n'existe pas : {chemin_cle_session_user}")
+            except Exception as e:
+                print(f"Erreur lors de la suppression du fichier : {e}")
+
+            try:
+                # Vérifie si le fichier existe
+                if os.path.exists(chemin_cle_session_coffre):
+                    os.remove(chemin_cle_session_coffre)  # Supprime le fichier
+                    ecrire_log("supprimer_cle_session_coffre", username)
+
+                    print(f"Fichier supprimé avec succès : {chemin_cle_session_coffre}")
+                    # Ajout du log
+                else:
+                    print(f"Le fichier n'existe pas : {chemin_cle_session_coffre}")
+            except Exception as e:
+                print(f"Erreur lors de la suppression du fichier : {e}")
             break
         elif choix == "2":
-            test_message_encryption(username)            
+            message_encryption(username)            
         else:
             print("Option invalide, veuillez réessayer.")
 
@@ -58,8 +89,8 @@ def User(p, g, username):
     chemin_fichier = os.path.join(chemin_dossier, "keya.key")
     with open(chemin_fichier, "w") as f:
         f.write(f"{ka_final}\n")
+    ecrire_log("ajouter_cle_session_utilisateur", username)
 
-    print(f"Clé utilisateur sauvegardée dans {chemin_fichier}.")
 
 
 def Coffre(p, g, A, username):
@@ -84,8 +115,7 @@ def Coffre(p, g, A, username):
     chemin_fichier = os.path.join(chemin_dossier, "keyb.key")
     with open(chemin_fichier, "w") as f:
         f.write(f"{kb_final}\n")
-
-    print(f"Clé coffre sauvegardée dans {chemin_fichier}.")
+    ecrire_log("ajouter_cle_session_coffre", username)
 
     return B
 

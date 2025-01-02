@@ -1,4 +1,0 @@
-nom:CoffreFort
-cle_publique:98765432109876543210
-date_expiration:1766683759
-signature:2596

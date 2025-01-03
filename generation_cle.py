@@ -1,4 +1,5 @@
 from test_Rabin_miller import rabin_miller
+from certificat_coffre import coffre_generer_certificat, utilisateur_generer_certificat
 import tools_crypto
 import os
 from log import ecrire_log
@@ -125,3 +126,11 @@ def creer_compte():
     # Stockage des clés dans des fichiers
 
     print('\n Clés générées et stockées avec succès \n')
+    
+    cle_pub_coffre = 98765432109876543210  # Clé publique du coffre
+    coffre_path_cert = f"coffre_fort/coffre_certificat.txt"
+    if not os.path.exists(coffre_path_cert):
+        coffre_generer_certificat(cle_pub_coffre)
+    # Générer un certificat utilisateur en récupérant la clé publique
+    utilisateur_generer_certificat(id_utilisateur)
+    print("\nCompte créé avec succès.\n")

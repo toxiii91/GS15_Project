@@ -22,7 +22,7 @@ def coffre_generer_certificat(cle_pub_coffre):
     }
 
     # Enregistrer le certificat principal dans le coffre
-    with open("coffre_fort/Config/coffre_certificat.txt", "w") as fichier:
+    with open("coffre_certificat.txt", "w") as fichier:
         for cle, valeur in certificat.items():
             fichier.write(f"{cle}:{valeur}\n")
 
@@ -30,34 +30,22 @@ def coffre_generer_certificat(cle_pub_coffre):
     return certificat
 
 
-def utilisateur_generer_certificat(username):
+def utilisateur_generer_certificat(username, cle_pub_user):
     """
-    Génère un certificat pour un utilisateur spécifique en récupérant la clé publique depuis /coffre_fort/<utilisateur>/public_key.key.
+    Génère un certificat pour un utilisateur spécifique à partir du certificat principal du coffre.
     """
-    # Chemin vers le certificat principal du coffre
-    if not os.path.exists("coffre_fort/Config/coffre_certificat.txt"):
+    if not os.path.exists("coffre_certificat.txt"):
         print("Erreur : Certificat principal non trouvé dans le coffre.")
         return
 
     # Charger le certificat principal
-    with open("coffre_fort/Config/coffre_certificat.txt", "r") as fichier:
+    with open("coffre_certificat.txt", "r") as fichier:
         lignes = fichier.readlines()
 
     certificat_coffre = {}
     for ligne in lignes:
         cle, valeur = ligne.strip().split(":")
         certificat_coffre[cle] = int(valeur) if valeur.isdigit() else valeur
-
-    # Chemin vers la clé publique de l'utilisateur
-    public_key_path = f"coffre_fort/{username}/public_key.key"
-    if not os.path.exists(public_key_path):
-        print(f"Erreur : Clé publique introuvable pour l'utilisateur '{username}'.")
-        return
-
-    # Charger la clé publique
-    with open(public_key_path, "r") as fichier:
-        public_key = fichier.read().strip()
-        cle_pub_user = public_key.split(",")[0]  # Extraire la première partie de la clé publique (n)
 
     # Générer le certificat utilisateur
     contenu_certificat_user = f"{username}{cle_pub_user}{certificat_coffre['date_expiration']}"
@@ -77,9 +65,8 @@ def utilisateur_generer_certificat(username):
         for cle, valeur in certificat_user.items():
             fichier.write(f"{cle}:{valeur}\n")
 
-    print(f"Certificat généré et stocké pour l'utilisateur '{username}'.")
+    print(f"Certificat généré et stocké pour l'utilisateur {username}.")
     return certificat_user
-
 
 
 def utilisateur_verifier_certificat(username):
@@ -123,7 +110,7 @@ def creer_compte(username, cle_pub_user, cle_pub_coffre):
     Création d'un compte utilisateur avec génération de certificat utilisateur.
     """
     # Générer le certificat principal si nécessaire
-    if not os.path.exists("coffre_fort/Config/coffre_certificat.txt"):
+    if not os.path.exists("coffre_certificat.txt"):
         coffre_generer_certificat(cle_pub_coffre)
 
     # Générer et stocker le certificat pour l'utilisateur

@@ -2,6 +2,7 @@ from Guillou_Quisquater import ZKP
 from generation_cle import creer_compte  
 from Diffie_Hellman import diffie_hellman
 from certificat_coffre import utilisateur_verifier_certificat
+import rsa_avec_padding
 
 def menu_principal():
     """Affiche le menu principal du program"""
@@ -27,11 +28,25 @@ def menu_principal():
                     while True:
                         print("Connexion réussie, que voulez-vous faire maintenant ?")
                         print("1. Créer une clé de session avec le coffre")
-                        print("2. Quitter")
+                        print("2. Chiffrer un fichier avec RSA et l'ajouter au coffre")
+                        print("3. Déchiffrer un fichier RSA du coffre")
+                        print("4. Quitter")
                         choix = input("Choisissez une option : ")
                         if choix == "1":
                             diffie_hellman(username)
                         elif choix == "2":
+                            chemin_fichier = input("Entrez le chemin du fichier à chiffrer/ajouter : ")
+                            rsa_avec_padding.ajouter_fichier_au_coffre(chemin_fichier, username)
+                        
+                        elif choix == "3":
+                            chemin_fichier_chiffre = input("Entrez le chemin du fichier chiffré en RSA (.enc) : ")
+                            chemin_cle_privee = f"users/{username}/private_key.key"
+                            private_key = rsa_avec_padding.charger_cle_privee(chemin_cle_privee)
+                            
+                            # On appelle la fonction de déchiffrement par blocs
+                            rsa_avec_padding.dechiffrer_fichier_par_blocs(chemin_fichier_chiffre, private_key)
+                        elif choix == "4":
+                            print("Déconnexion...")
                             break
                         else:
                             print("Option invalide, veuillez réessayer.")

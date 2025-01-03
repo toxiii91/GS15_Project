@@ -124,6 +124,120 @@ def cobra_encrypt(plaintext, round_keys):
     state ^= final_key  # Ajouter la clé finale au résultat
 
     return state
+def cobra_encrypt_file(chemin_fichier, round_keys, chemin_sortie=None):
+    if not os.path.exists(chemin_fichier):
+        print("[ERREUR] Fichier introuvable pour Cobra.")
+        return None
+
+    # Récupérer l'extension d’origine
+    _, extension = os.path.splitext(chemin_fichier)  # ex. (fichier_test, .txt)
+    extension_bytes = extension.encode('utf-8')       # b".txt"
+    long_ext = len(extension_bytes)
+    if long_ext > 255:
+        print("[ERREUR] Extension trop longue (>255 octets).")
+        return None
+
+    # Fichier de sortie .cobra
+    if chemin_sortie is None:
+        chemin_sortie = chemin_fichier + ".cobra"
+
+    # Lecture du fichier d’entrée (binaire)
+    with open(chemin_fichier, "rb") as f_in:
+        data = f_in.read()
+
+    # On applique un padding PKCS#7 (16 octets) pour Cobra
+    block_size = 16
+    pad_len = block_size - (len(data) % block_size)
+    padded_data = data + bytes([pad_len] * pad_len)
+
+    # Construire le header : [1 octet: taille extension] + extension
+    header = bytes([long_ext]) + extension_bytes
+    # => ex. si extension = ".txt" => b'\x04.txt' (car .txt fait 4 octets)
+
+    # On concatène header + le vrai contenu
+    data_a_chiffrer = header + padded_data
+
+    # Chiffrement bloc par bloc
+    resultat = bytearray()
+    for i in range(0, len(data_a_chiffrer), block_size):
+        block = int.from_bytes(data_a_chiffrer[i:i + block_size], 'big')
+        encrypted_block = cobra_encrypt(block, round_keys)
+        resultat += encrypted_block.to_bytes(block_size, 'big')
+
+    # Écriture du fichier chiffré
+    with open(chemin_sortie, "wb") as f_out:
+        f_out.write(resultat)
+
+    print(f"[OK] Fichier chiffré avec Cobra : {chemin_sortie}")
+    return chemin_sortie
+
+def cobra_decrypt_file(chemin_fichier_chiffre, round_keys, chemin_sortie=None):
+    if not os.path.exists(chemin_fichier_chiffre):
+        print("[ERREUR] Fichier chiffré Cobra introuvable.")
+        return None
+
+    # Si on ne sait pas le nom de sortie, on met .dec ou un suffixe
+    if chemin_sortie is None:
+        chemin_sortie = chemin_fichier_chiffre + ".dec"
+
+    with open(chemin_fichier_chiffre, "rb") as f_in:
+        data_chiffree = f_in.read()
+
+    block_size = 16
+    resultat = bytearray()
+
+    # Déchiffrement bloc par bloc
+    for i in range(0, len(data_chiffree), block_size):
+        block = int.from_bytes(data_chiffree[i : i + block_size], 'big')
+        decrypted_block = cobra_decrypt(block, round_keys)
+        resultat += decrypted_block.to_bytes(block_size, 'big')
+
+    # Retirer le padding PKCS#7 après avoir tout déchiffré
+    pad_len = resultat[-1]
+    if pad_len > block_size or any(p != pad_len for p in resultat[-pad_len:]):
+        print("[ERREUR] Padding Cobra invalide.")
+        return None
+
+    # On retire le padding
+    resultat = resultat[:-pad_len]
+
+    # ==========================
+    # Relecture du header
+    # ==========================
+    if len(resultat) < 1:
+        print("[ERREUR] Données trop courtes, pas de header.")
+        return None
+
+    long_ext = resultat[0]  # 1er octet = taille extension
+    if len(resultat) < 1 + long_ext:
+        print("[ERREUR] Header invalide ou corrompu.")
+        return None
+
+    extension_bytes = resultat[1 : 1 + long_ext]  # Lire l'extension
+    extension = extension_bytes.decode('utf-8', errors='replace')  # ex. ".txt"
+
+    # Le reste est le fichier clair
+    corps = resultat[1 + long_ext :]
+
+    # Écrire le fichier déchiffré
+    # => si tu veux tout renommer précisément, tu peux
+    #    par exemple stocker le "chemin_sortie" sans .dec
+    #    et y ajouter extension.
+    if chemin_sortie.endswith(".dec"):
+        # on retire .dec
+        chemin_base = chemin_sortie[:-4]
+    else:
+        chemin_base = chemin_sortie
+
+    chemin_definitif = chemin_base + extension
+
+    with open(chemin_definitif, "wb") as f_out:
+        f_out.write(corps)
+
+    print(f"[OK] Fichier déchiffré Cobra avec extension restaurée : {chemin_definitif}")
+    return chemin_definitif
+
+
 
 def cobra_decrypt(texte_chiffre, round_keys):
     state = texte_chiffre

@@ -3,6 +3,8 @@ from generation_cle import creer_compte
 from Diffie_Hellman import diffie_hellman
 from certificat_coffre import utilisateur_verifier_certificat
 import rsa_avec_padding
+import test_cobra
+from log import ecrire_log
 
 def menu_principal():
     """Affiche le menu principal du program"""
@@ -22,6 +24,7 @@ def menu_principal():
 
             # Vérification du certificat avant ZKP
             if utilisateur_verifier_certificat(username):
+                ecrire_log("verifier_certificat", username) 
                 print("Certificat valide. Vérification ZKP en cours...")
                 connexion = ZKP(username)
                 if connexion:
@@ -35,16 +38,43 @@ def menu_principal():
                         if choix == "1":
                             diffie_hellman(username)
                         elif choix == "2":
-                            chemin_fichier = input("Entrez le chemin du fichier à chiffrer/ajouter : ")
-                            rsa_avec_padding.ajouter_fichier_au_coffre(chemin_fichier, username)
-                        
+                                # On te demande le fichier à chiffrer
+                            chemin_fichier = input("Entrez le chemin du fichier à chiffrer/ajouter (Cobra+RSA) : ")
+
+                            # 1) On chiffre d'abord avec Cobra (en supposant que tu as round_keys quelque part)
+                            cle_initiale_dh = "11011010101101001010101101101010101010101010101010101010101010101111"
+                            round_keys =  test_cobra.generate_keys(cle_initiale_dh)
+
+                            fichier_cobra =  test_cobra.cobra_encrypt_file(chemin_fichier, round_keys)
+                            if not fichier_cobra:
+                                print("[ERREUR] Échec du chiffrement Cobra.")
+                                continue
+
+                            # 2) Puis on chiffre ce fichier Cobra avec RSA pour l'ajouter au coffre
+                            rsa_avec_padding.ajouter_fichier_au_coffre(fichier_cobra, username)
+                            ecrire_log("chiffrement_cobra+rsa",username)
                         elif choix == "3":
+                             # Fichier RSA
                             chemin_fichier_chiffre = input("Entrez le chemin du fichier chiffré en RSA (.enc) : ")
                             chemin_cle_privee = f"users/{username}/private_key.key"
                             private_key = rsa_avec_padding.charger_cle_privee(chemin_cle_privee)
-                            
-                            # On appelle la fonction de déchiffrement par blocs
-                            rsa_avec_padding.dechiffrer_fichier_par_blocs(chemin_fichier_chiffre, private_key)
+
+                            # 1) Déchiffrer RSA => donne un fichier .cobra
+                            fichier_cobra_dechiffre = rsa_avec_padding.dechiffrer_fichier_par_blocs(chemin_fichier_chiffre, private_key)
+                            if not fichier_cobra_dechiffre:
+                                print("[ERREUR] Le déchiffrement RSA a échoué.")
+                                continue
+
+                            # 2) Déchiffrer Cobra => donne le fichier final en clair
+                            cle_initiale_dh = "11011010101101001010101101101010101010101010101010101010101010101111"
+                            round_keys = test_cobra.generate_keys(cle_initiale_dh)
+
+                            fichier_final = test_cobra.cobra_decrypt_file(fichier_cobra_dechiffre, round_keys)
+                            ecrire_log("dechiffrement_rsa+cobrz",username)
+                            if fichier_final is None:
+                                print("[ERREUR] Le déchiffrement Cobra a échoué.")
+                            else:
+                                print(f"[OK] Fichier final reconstitué : {fichier_final}")
                         elif choix == "4":
                             print("Déconnexion...")
                             break

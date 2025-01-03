@@ -9,3 +9,15 @@ Ajout de la clé de session de l'utilisateur x dans le coffre-fort, 2025-01-01 1
 Ajout de la clé de session de l'utilisateur x dans son répertoire personnel, 2025-01-01 17:42:00
 Suppression de la clé de session de l'utilisateur x dans son répertoire personnel, 2025-01-01 17:42:05
 Suppression de la clé de session de l'utilisateur x dans le coffre-fort, 2025-01-01 17:42:05
+Création de l'utilisateur toto, 2025-01-03 22:49:21
+Ajout de la clé publique de l'utilisateur toto dans le coffre-fort, 2025-01-03 22:49:21
+Ajout de la clé privée de l'utilisateur toto dans son répertoire personnel, 2025-01-03 22:49:21
+Vérification du certificat du coffre par l'utilisateur toto, 2025-01-03 22:49:31
+ZKP entre l'utilisateur toto et le coffre, 2025-01-03 22:49:31
+Ajout de la clé de session de l'utilisateur toto dans le coffre-fort, 2025-01-03 22:49:45
+Ajout de la clé de session de l'utilisateur toto dans son répertoire personnel, 2025-01-03 22:49:45
+Connexion de l'utilisateur toto, 2025-01-03 22:49:45
+Utilisation de Cobra pour un simple message par utilisateur toto, 2025-01-03 22:50:09
+Dépot du fichier "users\toto\fichier.txt" de l'utilisateur toto, 2025-01-03 22:50:28
+Suppression de la clé de session de l'utilisateur toto dans son répertoire personnel, 2025-01-03 22:51:11
+Suppression de la clé de session de l'utilisateur toto dans le coffre-fort, 2025-01-03 22:51:11

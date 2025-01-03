@@ -2,6 +2,8 @@ from test_Rabin_miller import rabin_miller
 from certificat_coffre import coffre_generer_certificat, utilisateur_generer_certificat
 import tools_crypto
 import os
+from log import ecrire_log
+
 
 def obtenir_identifiant():
     # Répertoire où les dossiers utilisateurs sont stockés
@@ -108,15 +110,19 @@ def creer_compte():
     # Appel des fonctions
     id_utilisateur, dossier_utilisateur_coffre, dossier_utilisateur_client  = obtenir_identifiant()
     print(f"Identifiant final : {id_utilisateur}")
+    # Générer certificat  
     
     mdp = input("Entrez votre mot de passe permettant de générer une paire clé RSA : ")
 
     public_key, private_key = generer_couple_cles(mdp)
+    ecrire_log("creer_utilisateur", id_utilisateur)
     #print(f"Clé publique : {public_key}")
     #print(f"Clé privée : {private_key}")
 
     enregistrer_fichier(dossier_utilisateur_coffre, "public_key.key", public_key)
+    ecrire_log("ajouter_cle_publique", id_utilisateur)
     enregistrer_fichier(dossier_utilisateur_client, "private_key.key", private_key)
+    ecrire_log("ajouter_cle_privee", id_utilisateur)
     # Stockage des clés dans des fichiers
 
     print('\n Clés générées et stockées avec succès \n')

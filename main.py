@@ -20,19 +20,20 @@ def menu_principal():
         if choix == "1":
             creer_compte()
         elif choix == "2":
-            username = input("Entrez votre nom d'utilisateur : ")
-
+            username = input("Entrer votre nom d'utilisateur : ")
             # Vérification du certificat avant ZKP
             if utilisateur_verifier_certificat(username):
                 ecrire_log("verifier_certificat", username) 
                 print("Certificat valide. Vérification ZKP en cours...")
+                ecrire_log("verifier_certificat", username) 
                 connexion = ZKP(username)
+                ecrire_log("zkp", username)
                 if connexion:
                     while True:
                         print("Connexion réussie, que voulez-vous faire maintenant ?")
                         print("1. Créer une clé de session avec le coffre")
-                        print("2. Chiffrer un fichier avec RSA et l'ajouter au coffre")
-                        print("3. Déchiffrer un fichier RSA du coffre")
+                        print("2. Chiffrer un fichier avec Cobra et RSA et l'ajouter au coffre")
+                        print("3. Déchiffrer un fichier Cobra et RSA du coffre")
                         print("4. Quitter")
                         choix = input("Choisissez une option : ")
                         if choix == "1":
@@ -70,7 +71,7 @@ def menu_principal():
                             round_keys = test_cobra.generate_keys(cle_initiale_dh)
 
                             fichier_final = test_cobra.cobra_decrypt_file(fichier_cobra_dechiffre, round_keys)
-                            ecrire_log("dechiffrement_rsa+cobrz",username)
+                            ecrire_log("dechiffrement_cobra+rsa",username)
                             if fichier_final is None:
                                 print("[ERREUR] Le déchiffrement Cobra a échoué.")
                             else:
@@ -84,6 +85,7 @@ def menu_principal():
                     print("Connexion échouée (échec ZKP).")
             else:
                 print("Connexion échouée (certificat invalide).")
+
 
         elif choix == "3":
             print('\nAu revoir !\n')

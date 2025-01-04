@@ -1,3 +1,5 @@
+import os
+    
 def pad_key(key, block_size):
     """
     Ajuste la clé à la taille du bloc :
@@ -85,12 +87,8 @@ def hmac(key, message, block_size=64):
     # Étape 2 : Ajuster la clé à la taille du bloc
     key = pad_key(key, block_size)
 
-    # Debug : Afficher la clé après padding
-    print(f"Clé après padding : {key.hex()}")
-
     # Étape 3 : Calculer HMAC
     inner = xor_bytes(key, ipad) + message  # Clé ⊕ ipad || message
-    print("len: ", len(inner))
     inner_hash = custom_hash(inner)        # h(inner)
 
     outer = xor_bytes(key, opad) + inner_hash  # Clé ⊕ opad || inner_hash
@@ -99,24 +97,25 @@ def hmac(key, message, block_size=64):
     return hmac_result
 
 # Exemple d'utilisation
-if __name__ == "__main__":
+# calcul_hash(1,message, username, chemin_dossier_client)
+def calcul_hash(type, message, cle):
     # Clé initiale
-    key_str = "172634937217551326450149128688"
-    key = key_str.encode('utf-8')  # Convertir la chaîne de caractères en bytes
+    key_str = str(cle)  # Convertir l'entier en chaîne de caractères
+    key = key_str.encode('utf-8')  # Convertir la chaîne en bytes
+    message_bytes = message.encode('utf-8') # Convertir le message en bits        
+    hmac_result = hmac(key, message_bytes) # Calcul du HMAC        
+    print("HMAC:", hmac_result.hex()) # Affichage du résultat au format hexadecimal
+    if type == 1:
+        return hmac_result.hex()
+    
 
-    # Message à authentifier
-    message = "message_import".encode('utf-8')  # Convertir le message en bytes
 
-    # Calcul du HMAC
-    hmac_result = hmac(key, message)
 
-    # Affichage du résultat
-    print("HMAC:", hmac_result.hex())
+        # Test de l'effet avalanche avec une clé modifiée
+        #new_key_str = key_str + "1"  # Ajouter un caractère à la clé originale
+        #modified_key = new_key_str.encode('utf-8')  # Convertir la chaîne modifiée en bytes
+        #modified_hmac = hmac(modified_key, message_bytes)
 
-    # Test de l'effet avalanche
-    #modified_key = key_str[:-1].encode('utf-8')  # Supprime le dernier caractère
-    new_key = "1726349372175513264501491286881"
-    modified_key = new_key.encode('utf-8')  # Convertir la chaîne de caractères en bytes
-    modified_hmac = hmac(modified_key, message)
-    print("HMAC (clé modifiée):", modified_hmac.hex())
-    #print("Différences :", sum(b1 != b2 for b1, b2 in zip(hmac_result, modified_hmac)))
+        # Afficher les résultats
+        #print("HMAC (clé modifiée):", modified_hmac.hex())
+        #print("Différences :", sum(b1 != b2 for b1, b2 in zip(hmac_result, modified_hmac)))

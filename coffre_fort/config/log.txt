@@ -113,3 +113,103 @@ Dépot du fichier "users\testcert\fichier_test.txt" de l'utilisateur testcert, 2
 Suppression de la clé de session de l'utilisateur testcert dans son répertoire personnel, 2025-01-04 16:26:23
 Suppression de la clé de session de l'utilisateur testcert dans le coffre-fort, 2025-01-04 16:26:23
 Action inconnue pour l'utilisateur testcert, 2025-01-04 16:26:23
+Vérification du certificat du coffre par l'utilisateur toto, 2025-01-04 18:28:10
+ZKP entre l'utilisateur toto et le coffre, 2025-01-04 18:28:10
+Ajout de la clé de session de l'utilisateur toto dans le coffre-fort, 2025-01-04 18:28:10
+Ajout de la clé de session de l'utilisateur toto dans son répertoire personnel, 2025-01-04 18:28:10
+Connexion de l'utilisateur toto, 2025-01-04 18:28:10
+Dépot du fichier "users\toto\fichier.txt" de l'utilisateur toto, 2025-01-04 18:28:37
+Suppression de la clé de session de l'utilisateur toto dans son répertoire personnel, 2025-01-04 18:29:10
+Suppression de la clé de session de l'utilisateur toto dans le coffre-fort, 2025-01-04 18:29:10
+Action inconnue pour l'utilisateur toto, 2025-01-04 18:29:10
+Vérification du certificat du coffre par l'utilisateur toto, 2025-01-04 18:29:54
+ZKP entre l'utilisateur toto et le coffre, 2025-01-04 18:29:54
+Ajout de la clé de session de l'utilisateur toto dans le coffre-fort, 2025-01-04 18:29:54
+Ajout de la clé de session de l'utilisateur toto dans son répertoire personnel, 2025-01-04 18:29:54
+Connexion de l'utilisateur toto, 2025-01-04 18:29:54
+Récupération du fichier "coffre_fort\toto\fichier.txt" de l'utilisateur toto, 2025-01-04 18:30:09
+Suppression de la clé de session de l'utilisateur toto dans son répertoire personnel, 2025-01-04 18:30:11
+Suppression de la clé de session de l'utilisateur toto dans le coffre-fort, 2025-01-04 18:30:11
+Action inconnue pour l'utilisateur toto, 2025-01-04 18:30:11
+Vérification du certificat du coffre par l'utilisateur toto, 2025-01-04 19:11:41
+ZKP entre l'utilisateur toto et le coffre, 2025-01-04 19:11:41
+Ajout de la clé de session de l'utilisateur toto dans le coffre-fort, 2025-01-04 19:11:41
+Ajout de la clé de session de l'utilisateur toto dans son répertoire personnel, 2025-01-04 19:11:41
+Connexion de l'utilisateur toto, 2025-01-04 19:11:41
+Vérification du certificat du coffre par l'utilisateur toto, 2025-01-04 19:13:32
+ZKP entre l'utilisateur toto et le coffre, 2025-01-04 19:13:32
+Ajout de la clé de session de l'utilisateur toto dans le coffre-fort, 2025-01-04 19:13:32
+Ajout de la clé de session de l'utilisateur toto dans son répertoire personnel, 2025-01-04 19:13:32
+Connexion de l'utilisateur toto, 2025-01-04 19:13:32
+Vérification du certificat du coffre par l'utilisateur toto, 2025-01-04 19:14:12
+ZKP entre l'utilisateur toto et le coffre, 2025-01-04 19:14:12
+Ajout de la clé de session de l'utilisateur toto dans le coffre-fort, 2025-01-04 19:14:12
+Ajout de la clé de session de l'utilisateur toto dans son répertoire personnel, 2025-01-04 19:14:12
+Connexion de l'utilisateur toto, 2025-01-04 19:14:12
+Vérification du certificat du coffre par l'utilisateur toto, 2025-01-04 19:16:05
+ZKP entre l'utilisateur toto et le coffre, 2025-01-04 19:16:05
+Ajout de la clé de session de l'utilisateur toto dans le coffre-fort, 2025-01-04 19:16:05
+Ajout de la clé de session de l'utilisateur toto dans son répertoire personnel, 2025-01-04 19:16:05
+Connexion de l'utilisateur toto, 2025-01-04 19:16:05
+Utilisation de Cobra pour un simple message par utilisateur toto, 2025-01-04 19:16:09
+Utilisation de Cobra pour un simple message par utilisateur toto, 2025-01-04 19:16:18
+Utilisation de Cobra pour un simple message par utilisateur toto, 2025-01-04 19:16:32
+Utilisation de Cobra pour un simple message par utilisateur toto, 2025-01-04 19:16:42
+Suppression de la clé de session de l'utilisateur toto dans son répertoire personnel, 2025-01-04 19:16:54
+Suppression de la clé de session de l'utilisateur toto dans le coffre-fort, 2025-01-04 19:16:54
+Vérification du certificat du coffre par l'utilisateur toto, 2025-01-04 19:19:53
+ZKP entre l'utilisateur toto et le coffre, 2025-01-04 19:19:53
+Ajout de la clé de session de l'utilisateur toto dans le coffre-fort, 2025-01-04 19:19:53
+Ajout de la clé de session de l'utilisateur toto dans son répertoire personnel, 2025-01-04 19:19:53
+Connexion de l'utilisateur toto, 2025-01-04 19:19:53
+Dépot du fichier "users\toto\fichier.txt" de l'utilisateur toto, 2025-01-04 19:20:33
+Récupération du fichier "coffre_fort\toto\fichier.txt" de l'utilisateur toto, 2025-01-04 19:20:45
+Dépot du fichier "users\toto\fichier.txt" de l'utilisateur toto, 2025-01-04 19:21:14
+Récupération du fichier "coffre_fort\toto\fichier.txt" de l'utilisateur toto, 2025-01-04 19:21:26
+Dépot du fichier "users\toto\fichier.txt" de l'utilisateur toto, 2025-01-04 19:22:00
+Récupération du fichier "coffre_fort\toto\fichier.txt" de l'utilisateur toto, 2025-01-04 19:22:19
+Suppression de la clé de session de l'utilisateur toto dans son répertoire personnel, 2025-01-04 19:22:22
+Suppression de la clé de session de l'utilisateur toto dans le coffre-fort, 2025-01-04 19:22:22
+Vérification du certificat du coffre par l'utilisateur toto, 2025-01-04 19:33:19
+ZKP entre l'utilisateur toto et le coffre, 2025-01-04 19:33:19
+Ajout de la clé de session de l'utilisateur toto dans le coffre-fort, 2025-01-04 19:33:19
+Ajout de la clé de session de l'utilisateur toto dans son répertoire personnel, 2025-01-04 19:33:19
+Connexion de l'utilisateur toto, 2025-01-04 19:33:19
+Suppression de la clé de session de l'utilisateur toto dans son répertoire personnel, 2025-01-04 19:34:39
+Suppression de la clé de session de l'utilisateur toto dans le coffre-fort, 2025-01-04 19:34:39
+Vérification du certificat du coffre par l'utilisateur toto, 2025-01-04 19:34:47
+ZKP entre l'utilisateur toto et le coffre, 2025-01-04 19:34:47
+Ajout de la clé de session de l'utilisateur toto dans le coffre-fort, 2025-01-04 19:34:47
+Ajout de la clé de session de l'utilisateur toto dans son répertoire personnel, 2025-01-04 19:34:47
+Connexion de l'utilisateur toto, 2025-01-04 19:34:47
+Dépot du fichier "users\toto\fichier.txt" de l'utilisateur toto, 2025-01-04 19:35:13
+Suppression de la clé de session de l'utilisateur toto dans son répertoire personnel, 2025-01-04 19:45:08
+Suppression de la clé de session de l'utilisateur toto dans le coffre-fort, 2025-01-04 19:45:08
+Vérification du certificat du coffre par l'utilisateur toto, 2025-01-04 19:45:17
+ZKP entre l'utilisateur toto et le coffre, 2025-01-04 19:45:17
+Ajout de la clé de session de l'utilisateur toto dans le coffre-fort, 2025-01-04 19:45:17
+Ajout de la clé de session de l'utilisateur toto dans son répertoire personnel, 2025-01-04 19:45:17
+Connexion de l'utilisateur toto, 2025-01-04 19:45:17
+Vérification du certificat du coffre par l'utilisateur toto, 2025-01-04 19:46:46
+ZKP entre l'utilisateur toto et le coffre, 2025-01-04 19:46:46
+Ajout de la clé de session de l'utilisateur toto dans le coffre-fort, 2025-01-04 19:46:46
+Ajout de la clé de session de l'utilisateur toto dans son répertoire personnel, 2025-01-04 19:46:46
+Connexion de l'utilisateur toto, 2025-01-04 19:46:46
+Utilisation de Cobra pour un simple message par utilisateur toto, 2025-01-04 19:46:52
+Utilisation de Cobra pour un simple message par utilisateur toto, 2025-01-04 19:47:01
+La hash : "07465bea0c826c7f534c6b7fe7e7c593" a été calculé par l'utilisateur toto pour le fichier "users\toto\fichier.txt", 2025-01-04 19:47:56
+La hash : "07465bea0c826c7f534c6b7fe7e7c593" a été calculé par le coffre pour l'utilisateur toto pour le fichier "users\toto\fichier.txt", 2025-01-04 19:48:02
+Dépot du fichier "users\toto\fichier.txt" de l'utilisateur toto, 2025-01-04 19:48:02
+Suppression de la clé de session de l'utilisateur toto dans son répertoire personnel, 2025-01-04 19:54:55
+Suppression de la clé de session de l'utilisateur toto dans le coffre-fort, 2025-01-04 19:54:55
+Vérification du certificat du coffre par l'utilisateur toto, 2025-01-04 19:55:01
+ZKP entre l'utilisateur toto et le coffre, 2025-01-04 19:55:01
+Ajout de la clé de session de l'utilisateur toto dans le coffre-fort, 2025-01-04 19:55:01
+Ajout de la clé de session de l'utilisateur toto dans son répertoire personnel, 2025-01-04 19:55:01
+Connexion de l'utilisateur toto, 2025-01-04 19:55:01
+La hash : "e5a314dae3f955148a319177dda566e6" a été calculé par l'utilisateur toto pour le fichier "users\toto\fichier2.txt", 2025-01-04 19:55:13
+La hash : "e5a314dae3f955148a319177dda566e6" a été calculé par le coffre pour l'utilisateur toto pour le fichier "users\toto\fichier2.txt", 2025-01-04 19:55:17
+Dépot du fichier "users\toto\fichier2.txt" de l'utilisateur toto, 2025-01-04 19:55:17
+La hash : "e5a314dae3f955148a319177dda566e6" a été calculé par le coffre pour l'utilisateur toto pour le fichier "coffre_fort\toto\fichier2.txt", 2025-01-04 19:55:30
+Récupération du fichier "coffre_fort\toto\fichier2.txt" de l'utilisateur toto, 2025-01-04 19:55:34
+La hash : "e5a314dae3f955148a319177dda566e6" a été calculé par l'utilisateur toto pour le fichier "coffre_fort\toto\fichier2.txt", 2025-01-04 19:55:34

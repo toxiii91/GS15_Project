@@ -59,7 +59,7 @@ if __name__ == "__main__":
     key = key_str.encode('utf-8')  # Convertit la chaîne de caractères en bytes
 
     # Message à authentifier
-    message = "message_import".encode('utf-8')  # Convertit le message en bytes
+    message = "message import".encode('utf-8')  # Convertit le message en bytes
 
     # Calcul du HMAC
     hmac_result = hmac(key, message)

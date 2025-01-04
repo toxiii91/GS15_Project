@@ -2,6 +2,7 @@ import os
 from math import gcd
 import shutil
 from log import ecrire_log
+from Merkle import calcul_hash
 
 # Constantes
 PHI = 0x9E3779B9  # Nombre parfait φ
@@ -217,6 +218,18 @@ def lire_cle_utilisateur(username):
         print("Erreur : La clé est invalide.")
         return None
 
+def lire_cle_coffre(username):
+    chemin_cle = os.path.join("coffre_fort", username, "keyb.key")
+    try:
+        with open(chemin_cle, "r") as f:
+            return int(f.read().strip())
+    except FileNotFoundError:
+        print("Erreur : Fichier de clé introuvable.")
+        return None
+    except ValueError:
+        print("Erreur : La clé est invalide.")
+        return None
+
 def obtenir_chemin_fichier(base_dossier, message):
     nom_fichier = input(message).strip()
     chemin_fichier = os.path.join(base_dossier, nom_fichier)
@@ -267,6 +280,8 @@ def message_encryption(username):
 
     if choix == "1":
         message = input("Entrez votre message : ")
+        # hash 1 
+        calcul_hash(0, message, cle)
         encrypted_hex, decrypted = traiter_message(message, round_keys)
         if encrypted_hex:
             print("Message chiffré :", encrypted_hex)
@@ -282,13 +297,17 @@ def message_encryption(username):
         try:
             with open(chemin_fichier, 'r', encoding='utf-8') as fichier:
                 contenu = fichier.read()
-            encrypted_hex, decrypted = traiter_message(contenu, round_keys)
+                # hash 2
+            hash = calcul_hash(1, contenu, cle)
+            ecrire_log("hashage_user", username, chemin_fichier, hash)            
+            encrypted = cobra_encrypt_message(contenu, round_keys)
+            encrypted_hex = encrypted.hex()
+            
             if not encrypted_hex:
                 return
         except Exception as e:
             print(f"Erreur lors de la lecture du fichier : {e}")
             return
-
         ecrire_fichier(chemin_fichier, encrypted_hex)
         print("Fichier chiffré avec succès.")
         
@@ -301,8 +320,16 @@ def message_encryption(username):
         if deplacer_fichier(chemin_fichier, chemin_destination):
             confirmation = input("Confirmez-vous le déchiffrement du fichier ? (1 pour oui) : ").strip()
             if confirmation == "1":
+                cle_DH_coffre = lire_cle_coffre(username)
+                if cle_DH_coffre is None:
+                    return
+                cle_initiale_dh_2 = key_to_binary(cle_DH_coffre)
+                round_keys_2 = generate_keys(cle_initiale_dh_2)
+                decrypted = cobra_decrypt_message(encrypted, round_keys_2)
                 ecrire_fichier(chemin_destination, decrypted)
                 print("Fichier déchiffré avec succès.")
+                hash2 = calcul_hash(1, decrypted, cle_DH_coffre)
+                ecrire_log("hashage_coffre", username, chemin_fichier, hash2)
                 ecrire_log("depot_fichier", username, chemin_fichier)
 
 
@@ -314,14 +341,21 @@ def message_encryption(username):
 
         try:
             with open(chemin_fichier, 'r', encoding='utf-8') as fichier:
-                contenu = fichier.read()
-            encrypted_hex, decrypted = traiter_message(contenu, round_keys)
+                contenu = fichier.read() 
+            cle_DH_coffre = lire_cle_coffre(username)
+            if cle_DH_coffre is None:
+                return
+            cle_initiale_dh_2 = key_to_binary(cle_DH_coffre)
+            round_keys_2 = generate_keys(cle_initiale_dh_2)
+            hash2 = calcul_hash(1, contenu, cle_DH_coffre)
+            ecrire_log("hashage_coffre", username, chemin_fichier, hash2)           
+            encrypted = cobra_encrypt_message(contenu, round_keys_2)
+            encrypted_hex = encrypted.hex()
             if not encrypted_hex:
                 return
         except Exception as e:
             print(f"Erreur lors de la lecture du fichier : {e}")
             return
-
         ecrire_fichier(chemin_fichier, encrypted_hex)
         print("Fichier chiffré avec succès.")
         
@@ -334,7 +368,11 @@ def message_encryption(username):
         if deplacer_fichier(chemin_fichier, chemin_destination):
             confirmation = input("Confirmez-vous le déchiffrement du fichier ? (1 pour oui) : ").strip()
             if confirmation == "1":
+                decrypted = cobra_decrypt_message(encrypted, round_keys)
                 ecrire_fichier(chemin_destination, decrypted)
+                hash = calcul_hash(1, decrypted, cle)
+                ecrire_log("hashage_user", username, chemin_fichier, hash)
                 ecrire_log("recuperation_fichier", username, chemin_fichier)
+                
     else:
         print("Option invalide.")

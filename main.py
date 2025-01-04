@@ -36,8 +36,6 @@ def menu_principal():
                         print("[OK] Clé de session générée avec succès.")
                         ecrire_log("creation_cle_session", username)
                     else:
-                        print("[ERREUR] Échec de la génération de la clé de session.")
-                        ecrire_log("erreur_creation_cle_session", username)
                         continue  # Retour au menu principal si la génération échoue
 
                     while True:

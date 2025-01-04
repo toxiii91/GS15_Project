@@ -4,7 +4,7 @@ from datetime import datetime
 # Chemin vers le fichier de log
 LOG_FILE_PATH = "./coffre_fort/config/log.txt"
 
-def ecrire_log(nom_fonction, utilisateur, nom_fichier=None):
+def ecrire_log(nom_fonction, utilisateur, nom_fichier=None, hash=None):
     """
     Écrit un message dans le fichier de log en fonction de l'opération effectuée.
     
@@ -36,7 +36,9 @@ def ecrire_log(nom_fonction, utilisateur, nom_fichier=None):
         "erreur_dechiffrement_rsa": f"Échec du déchiffrement RSA pour le fichier \"{nom_fichier}\" par l'utilisateur {utilisateur}",
         "erreur_dechiffrement_cobra": f"Échec du déchiffrement Cobra pour le fichier \"{nom_fichier}\" par l'utilisateur {utilisateur}",
         "erreur_fichier_deja_dechiffre": f"Tentative de déchiffrement d'un fichier déjà déchiffré \"{nom_fichier}\" par l'utilisateur {utilisateur}",
-        "dechiffrement_reussi": f"Déchiffrement réussi du fichier \"{nom_fichier}\" par l'utilisateur {utilisateur}"
+        "dechiffrement_reussi": f"Déchiffrement réussi du fichier \"{nom_fichier}\" par l'utilisateur {utilisateur}",
+        "hashage_user": f"La hash : \"{hash}\" a été calculé par l'utilisateur {utilisateur} pour le fichier \"{nom_fichier}\"",
+        "hashage_coffre": f"La hash : \"{hash}\" a été calculé par le coffre pour l'utilisateur {utilisateur} pour le fichier \"{nom_fichier}\""
     }
 
     # Récupération du message à partir du nom de la fonction

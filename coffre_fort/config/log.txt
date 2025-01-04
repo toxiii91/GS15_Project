@@ -37,3 +37,36 @@ Vérification du certificat du coffre par l'utilisateur testcert, 2025-01-04 00:
 ZKP entre l'utilisateur testcert et le coffre, 2025-01-04 00:38:58
 Utilisationde COBRA et RSA pour chiffrer le fichier "None" de l'utilisateur testcert dans le coffre, 2025-01-04 00:39:09
 Utilisation de COBRA et RSA pour dechiffrer le fichier "None" de l'utilisateur testcert dans le coffre, 2025-01-04 00:39:25
+Vérification du certificat du coffre par l'utilisateur testcert, 2025-01-04 10:13:30
+Vérification du certificat du coffre par l'utilisateur testcert, 2025-01-04 10:13:30
+ZKP entre l'utilisateur testcert et le coffre, 2025-01-04 10:13:30
+Utilisationde COBRA et RSA pour chiffrer le fichier "None" de l'utilisateur testcert dans le coffre, 2025-01-04 10:13:48
+Vérification du certificat du coffre par l'utilisateur testcert, 2025-01-04 10:27:49
+Vérification du certificat du coffre par l'utilisateur testcert, 2025-01-04 10:27:49
+ZKP entre l'utilisateur testcert et le coffre, 2025-01-04 10:27:49
+Vérification du certificat du coffre par l'utilisateur testcert, 2025-01-04 10:34:53
+Vérification du certificat du coffre par l'utilisateur testcert, 2025-01-04 10:34:53
+ZKP entre l'utilisateur testcert et le coffre, 2025-01-04 10:34:53
+Utilisation de COBRA et RSA pour dechiffrer le fichier "None" de l'utilisateur testcert dans le coffre, 2025-01-04 10:35:11
+Action inconnue pour l'utilisateur testcert, 2025-01-04 10:35:11
+Vérification du certificat du coffre par l'utilisateur testcert, 2025-01-04 11:00:37
+Vérification du certificat du coffre par l'utilisateur testcert, 2025-01-04 11:00:37
+ZKP entre l'utilisateur testcert et le coffre, 2025-01-04 11:00:37
+Vérification du certificat du coffre par l'utilisateur testcert, 2025-01-04 11:02:29
+Vérification du certificat du coffre par l'utilisateur testcert, 2025-01-04 11:02:29
+ZKP entre l'utilisateur testcert et le coffre, 2025-01-04 11:02:29
+Tentative de chiffrement d'un fichier inexistant "None" par l'utilisateur testcert, 2025-01-04 11:02:44
+Tentative de chiffrement d'un fichier inexistant "None" par l'utilisateur testcert, 2025-01-04 11:09:01
+Vérification du certificat du coffre par l'utilisateur testcert, 2025-01-04 11:15:47
+Vérification du certificat du coffre par l'utilisateur testcert, 2025-01-04 11:15:47
+ZKP entre l'utilisateur testcert et le coffre, 2025-01-04 11:15:47
+Utilisation de COBRA et RSA pour chiffrer le fichier "fichier_test.txt.cobra.enc" de l'utilisateur testcert dans le coffre, 2025-01-04 11:16:02
+Utilisation de COBRA et RSA pour dechiffrer le fichier "fichier_test.txt.cobra.enc" de l'utilisateur testcert dans le coffre, 2025-01-04 11:18:22
+Action inconnue pour l'utilisateur testcert, 2025-01-04 11:18:22
+Tentative de chiffrement d'un fichier déjà chiffré "fichier_test.txt.cobra.enc" par l'utilisateur testcert, 2025-01-04 11:19:20
+Vérification du certificat du coffre par l'utilisateur testcert, 2025-01-04 11:28:19
+Vérification du certificat du coffre par l'utilisateur testcert, 2025-01-04 11:28:19
+ZKP entre l'utilisateur testcert et le coffre, 2025-01-04 11:28:19
+Utilisation de COBRA et RSA pour chiffrer le fichier "fichier_test.txt.cobra.enc" de l'utilisateur testcert dans le coffre, 2025-01-04 11:28:26
+Action inconnue pour l'utilisateur testcert, 2025-01-04 11:28:26
+Tentative de chiffrement d'un fichier déjà chiffré "fichier_test.txt.cobra.enc" par l'utilisateur testcert, 2025-01-04 11:30:57

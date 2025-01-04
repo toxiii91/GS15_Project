@@ -27,8 +27,16 @@ def ecrire_log(nom_fonction, utilisateur, nom_fichier=None):
         "depot_fichier": f"Dépot du fichier \"{nom_fichier}\" de l'utilisateur {utilisateur}",
         "recuperation_fichier": f"Récupération du fichier \"{nom_fichier}\" de l'utilisateur {utilisateur}",
         "cobra_message": f"Utilisation de Cobra pour un simple message par utilisateur {utilisateur}",
-        "chiffrement_cobra+rsa": f"Utilisationde COBRA et RSA pour chiffrer le fichier \"{nom_fichier}\" de l'utilisateur {utilisateur} dans le coffre",
-        "dechiffrement_cobra+rsa": f"Utilisation de COBRA et RSA pour dechiffrer le fichier \"{nom_fichier}\" de l'utilisateur {utilisateur} dans le coffre"
+        "chiffrement_cobra+rsa": f"Utilisation de COBRA et RSA pour chiffrer le fichier \"{nom_fichier}\" de l'utilisateur {utilisateur} dans le coffre",
+        "dechiffrement_cobra+rsa": f"Utilisation de COBRA et RSA pour dechiffrer le fichier \"{nom_fichier}\" de l'utilisateur {utilisateur} dans le coffre",
+        "erreur_fichier_inexistant": f"Tentative de chiffrement d'un fichier inexistant \"{nom_fichier}\" par l'utilisateur {utilisateur}",
+        "erreur_fichier_deja_chiffre": f"Tentative de chiffrement d'un fichier déjà chiffré \"{nom_fichier}\" par l'utilisateur {utilisateur}",
+        "erreur_chiffrement_cobra": f"Échec du chiffrement Cobra pour le fichier \"{nom_fichier}\" par l'utilisateur {utilisateur}",
+        "erreur_fichier_dechiffrement_inexistant": f"Tentative de déchiffrement d'un fichier inexistant \"{nom_fichier}\" par l'utilisateur {utilisateur}",
+        "erreur_dechiffrement_rsa": f"Échec du déchiffrement RSA pour le fichier \"{nom_fichier}\" par l'utilisateur {utilisateur}",
+        "erreur_dechiffrement_cobra": f"Échec du déchiffrement Cobra pour le fichier \"{nom_fichier}\" par l'utilisateur {utilisateur}",
+        "erreur_fichier_deja_dechiffre": f"Tentative de déchiffrement d'un fichier déjà déchiffré \"{nom_fichier}\" par l'utilisateur {utilisateur}",
+        "dechiffrement_reussi": f"Déchiffrement réussi du fichier \"{nom_fichier}\" par l'utilisateur {utilisateur}"
     }
 
     # Récupération du message à partir du nom de la fonction

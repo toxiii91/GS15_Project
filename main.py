@@ -30,30 +30,29 @@ def menu_principal():
                 connexion = ZKP(username)
                 ecrire_log("zkp", username)
                 if connexion:
-                    # Initialiser la clé de session à None
-                    session_key = None
+                    # Génération automatique de la clé de session
+                    session_key = diffie_hellman(username)
+                    if session_key:
+                        print("[OK] Clé de session générée avec succès.")
+                        ecrire_log("creation_cle_session", username)
+                    else:
+                        print("[ERREUR] Échec de la génération de la clé de session.")
+                        ecrire_log("erreur_creation_cle_session", username)
+                        continue  # Retour au menu principal si la génération échoue
+
                     while True:
                         print("\nConnexion réussie, que voulez-vous faire maintenant ?")
-                        print("1. Créer une clé de session avec le coffre")
-                        print("2. Déposer un fichier dans le coffre")
-                        print("3. Récupérer un fichier du coffre")
-                        print("4. Quitter")
+                        # Suppression de l'option de création de clé de session
+                        print("1. Déposer un fichier dans le coffre")
+                        print("2. Récupérer un fichier du coffre")
+                        print("3. Quitter")
                         choix = input("Choisissez une option : ").strip()
                         
                         if choix == "1":
-                            # Option de Création de Clé de Session
-                            session_key = diffie_hellman(username)
-                            if session_key:
-                                print("[OK] Clé de session générée avec succès.")
-                                ecrire_log("creation_cle_session", username)
-                            else:
-                                print("[ERREUR] Échec de la génération de la clé de session.")
-                                ecrire_log("erreur_creation_cle_session", username)
-                        
-                        elif choix == "2":
                             # Option de Dépôt de Fichier
                             if not session_key:
-                                print("[ERREUR] Vous devez d'abord créer une clé de session (Option 1).")
+                                print("[ERREUR] La clé de session est manquante.")
+                                ecrire_log("erreur_cle_session_manquante", username)
                                 continue
                             
                             chemin_dossier_client = os.path.join("users", username)
@@ -78,7 +77,7 @@ def menu_principal():
                             cle_initiale_dh = cobra.key_to_binary(session_key)
                             round_keys = cobra.generate_keys(cle_initiale_dh)
                             
-                            # 3) Utiliser Cobra pour chiffrer le fichier
+                            # Utiliser Cobra pour chiffrer le fichier
                             try:
                                 with open(chemin_complet, 'rb') as f:
                                     contenu = f.read()
@@ -94,7 +93,7 @@ def menu_principal():
                                 ecrire_log("erreur_chiffrement_cobra", username, nom_fichier)
                                 continue
 
-                            # 4) Sauvegarder le contenu chiffré dans un fichier temporaire
+                            # Sauvegarder le contenu chiffré dans un fichier temporaire
                             fichier_temp_enc = f"{chemin_complet}.cobra.enc.temp"
                             try:
                                 with open(fichier_temp_enc, 'w', encoding='utf-8') as f:
@@ -105,16 +104,18 @@ def menu_principal():
                                 ecrire_log("erreur_ecriture_temp_enc", username, fichier_temp_enc)
                                 continue
 
-                            # 5) Déplacer le fichier chiffré temporaire vers coffre_fort/{username}/
+                            # Déplacer le fichier chiffré temporaire vers coffre_fort/{username}/
                             chemin_fichier_coffre_temp = os.path.join(chemin_dossier_coffre, f"{nom_fichier}.cobra.enc.temp")
                             success = cobra.deplacer_fichier(fichier_temp_enc, chemin_fichier_coffre_temp)
                             if success:
                                 print(f"[OK] Fichier chiffré déplacé vers le coffre : {chemin_fichier_coffre_temp}")
+                                ecrire_log("deplacement_cobra_temp", username, chemin_fichier_coffre_temp)
                             else:
                                 print("[ERREUR] Impossible de déplacer le fichier chiffré vers le coffre.")
+                                ecrire_log("erreur_deplacement_cobra_temp", username, chemin_fichier_coffre_temp)
                                 continue
 
-                            # 6) Déchiffrer le fichier dans coffre_fort avec Cobra
+                            # Déchiffrer le fichier dans coffre_fort avec Cobra
                             try:
                                 with open(chemin_fichier_coffre_temp, 'r', encoding='utf-8') as f:
                                     encrypted_hex_coffre = f.read()
@@ -125,7 +126,7 @@ def menu_principal():
                                 ecrire_log("erreur_dechiffrement_cobra_coffre", username, chemin_fichier_coffre_temp)
                                 continue
 
-                            # 7) Chiffrer le fichier avec RSA
+                            # Chiffrer le fichier avec RSA
                             try:
                                 # Sauvegarder le contenu déchiffré dans un fichier temporaire
                                 fichier_temp_dechiffre = f"{chemin_fichier_coffre_temp}.dechiffre.temp"
@@ -156,10 +157,11 @@ def menu_principal():
                                 ecrire_log("erreur_chiffrement_rsa", username, fichier_temp_dechiffre)
                                 continue
 
-                        elif choix == "3":
+                        elif choix == "2":
                             # Option de Récupération de Fichier
                             if not session_key:
-                                print("[ERREUR] Vous devez d'abord créer une clé de session (Option 1).")
+                                print("[ERREUR] La clé de session est manquante.")
+                                ecrire_log("erreur_cle_session_manquante", username)
                                 continue
 
                             chemin_dossier_coffre = os.path.join("coffre_fort", username)
@@ -240,8 +242,9 @@ def menu_principal():
                             os.remove(fichier_temp_dechiffre)
                             ecrire_log("suppression_dechiffre_temp", username, fichier_temp_dechiffre)
                             
-                        elif choix == "4":
+                        elif choix == "3":
                             print("Déconnexion...")
+        
                             break
                         else:
                             print("Option invalide, veuillez réessayer.")
@@ -255,7 +258,7 @@ def menu_principal():
             ZKP()
         elif choix == "5":
             print("Vous avez sélectionné l'option 5 !")
-            diffie_hellman()
+            diffie_hellman(username) 
         else:
             print("Option invalide, veuillez réessayer.")
 

@@ -95,3 +95,21 @@ Ajout de la clé de session de l'utilisateur testcert dans le coffre-fort, 2025-
 Ajout de la clé de session de l'utilisateur testcert dans son répertoire personnel, 2025-01-04 14:21:14
 Connexion de l'utilisateur testcert, 2025-01-04 14:21:14
 Récupération du fichier "coffre_fort\testcert\fichier_test.txt" de l'utilisateur testcert, 2025-01-04 14:22:00
+Vérification du certificat du coffre par l'utilisateur testcert, 2025-01-04 16:11:21
+ZKP entre l'utilisateur testcert et le coffre, 2025-01-04 16:11:21
+Ajout de la clé de session de l'utilisateur testcert dans le coffre-fort, 2025-01-04 16:11:21
+Ajout de la clé de session de l'utilisateur testcert dans son répertoire personnel, 2025-01-04 16:11:21
+Connexion de l'utilisateur testcert, 2025-01-04 16:11:21
+Dépot du fichier "users\testcert\fichier_test.txt" de l'utilisateur testcert, 2025-01-04 16:12:18
+Suppression de la clé de session de l'utilisateur testcert dans son répertoire personnel, 2025-01-04 16:12:24
+Suppression de la clé de session de l'utilisateur testcert dans le coffre-fort, 2025-01-04 16:12:24
+Action inconnue pour l'utilisateur testcert, 2025-01-04 16:12:24
+Vérification du certificat du coffre par l'utilisateur testcert, 2025-01-04 16:25:11
+ZKP entre l'utilisateur testcert et le coffre, 2025-01-04 16:25:11
+Ajout de la clé de session de l'utilisateur testcert dans le coffre-fort, 2025-01-04 16:25:11
+Ajout de la clé de session de l'utilisateur testcert dans son répertoire personnel, 2025-01-04 16:25:11
+Connexion de l'utilisateur testcert, 2025-01-04 16:25:11
+Dépot du fichier "users\testcert\fichier_test.txt" de l'utilisateur testcert, 2025-01-04 16:26:07
+Suppression de la clé de session de l'utilisateur testcert dans son répertoire personnel, 2025-01-04 16:26:23
+Suppression de la clé de session de l'utilisateur testcert dans le coffre-fort, 2025-01-04 16:26:23
+Action inconnue pour l'utilisateur testcert, 2025-01-04 16:26:23

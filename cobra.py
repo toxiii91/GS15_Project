@@ -35,11 +35,6 @@ def key_to_binary(key):
     
     return binary_key
 
-def write_to_file(filename, content):
-    """Crée un fichier et écrit le contenu dedans."""
-    with open(filename, "w", encoding="utf-8") as file:
-        file.write(content)
-
 def validate_cle_initiale_dh(cle_initiale_dh):
     if not set(cle_initiale_dh).issubset({'0', '1'}):
         raise ValueError("La clé initiale doit être une chaîne binaire composée uniquement de '0' et '1'.")
@@ -204,9 +199,6 @@ def cobra_decrypt_message(encrypted_message, round_keys):
         raise ValueError("Padding invalide détecté lors du déchiffrement.")
     return decrypted[:-padding_len].decode('utf-8')
 
-import os
-import shutil
-
 def lire_cle_utilisateur(username):
     chemin_cle = os.path.join("users", username, "keya.key")
     try:
@@ -281,7 +273,6 @@ def message_encryption(username):
 
     if choix == "1":
         message = input("Entrez votre message : ")
-        # hash 1 
         calcul_hash(0, message, cle)
         encrypted_hex, decrypted = traiter_message(message, round_keys)
         if encrypted_hex:
@@ -298,7 +289,6 @@ def message_encryption(username):
         try:
             with open(chemin_fichier, 'r', encoding='utf-8') as fichier:
                 contenu = fichier.read()
-                # hash 2
             hash = calcul_hash(1, contenu, cle)
             ecrire_log("hashage_user", username, chemin_fichier, hash)            
             encrypted = cobra_encrypt_message(contenu, round_keys)
@@ -333,7 +323,6 @@ def message_encryption(username):
                 ecrire_log("hashage_coffre", username, chemin_destination, hash2)
                 ecrire_log("depot_fichier", username, chemin_destination)
 
-            # RSA
             confirmationRSA = input("Confirmez-vous le chiffrement avec RSA ? (1 pour oui) : ").strip()
             if confirmationRSA == "1":
                 try:
@@ -389,7 +378,9 @@ def message_encryption(username):
             if confirmation == "1":
                 decrypted = cobra_decrypt_message(encrypted, round_keys)
                 ecrire_fichier(chemin_destination, decrypted)
-                ecrire_log("recuperation_fichier", username, chemin_fichier)
+                hash = calcul_hash(1, contenu, cle)
+                ecrire_log("hashage_coffre", username, chemin_destination, hash)
+                ecrire_log("recuperation_fichier", username, chemin_destination)
                 
     else:
         print("Option invalide.")

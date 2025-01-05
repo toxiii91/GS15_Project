@@ -129,13 +129,3 @@ def creer_compte(username, cle_pub_user, cle_pub_coffre):
     # Générer et stocker le certificat pour l'utilisateur
     utilisateur_generer_certificat(username, cle_pub_user)
 
-
-def se_connecter(username):
-    """
-    Processus de connexion pour un utilisateur.
-    """
-    if utilisateur_verifier_certificat(username):
-        print(f"Connexion réussie pour {username}.")
-        # Ajouter ici les étapes supplémentaires comme ZKP
-    else:
-        print(f"Connexion refusée pour {username}.")

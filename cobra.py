@@ -3,6 +3,7 @@ from math import gcd
 import shutil
 from log import ecrire_log
 from Merkle import calcul_hash
+from rsa_avec_padding import ajouter_fichier_au_coffre, dechiffrer_fichier_par_blocs
 
 # Constantes
 PHI = 0x9E3779B9  # Nombre parfait φ
@@ -329,8 +330,18 @@ def message_encryption(username):
                 ecrire_fichier(chemin_destination, decrypted)
                 print("Fichier déchiffré avec succès.")
                 hash2 = calcul_hash(1, decrypted, cle_DH_coffre)
-                ecrire_log("hashage_coffre", username, chemin_fichier, hash2)
-                ecrire_log("depot_fichier", username, chemin_fichier)
+                ecrire_log("hashage_coffre", username, chemin_destination, hash2)
+                ecrire_log("depot_fichier", username, chemin_destination)
+
+            # RSA
+            confirmationRSA = input("Confirmez-vous le chiffrement avec RSA ? (1 pour oui) : ").strip()
+            if confirmationRSA == "1":
+                try:
+                    ajouter_fichier_au_coffre(chemin_destination, username)
+                    ecrire_log("chiffrement_rsa", username, chemin_destination)
+                except Exception as e:
+                    print(f"[ERREUR] Échec du chiffrement RSA : {e}")
+                    ecrire_log("erreur_chiffrement_rsa", username, chemin_destination)
 
 
     elif choix == "3":
@@ -340,15 +351,23 @@ def message_encryption(username):
             return
 
         try:
-            with open(chemin_fichier, 'r', encoding='utf-8') as fichier:
-                contenu = fichier.read() 
+            confirmationRSA = input("Confirmez-vous le déchiffrement avec RSA ? (1 pour oui) : ").strip()
+            if confirmationRSA == "1":
+                try:
+                    new_chemin = dechiffrer_fichier_par_blocs(chemin_fichier, username)
+                    ecrire_log("dechiffrement_rsa", username, new_chemin)
+                except Exception as e:
+                    print(f"[ERREUR] Échec du chiffrement RSA : {e}")
+                    ecrire_log("erreur_chiffrement_rsa", username, new_chemin)
+            with open(new_chemin, 'r', encoding='utf-8', errors='ignore') as fichier:
+                contenu = fichier.read()
             cle_DH_coffre = lire_cle_coffre(username)
             if cle_DH_coffre is None:
                 return
             cle_initiale_dh_2 = key_to_binary(cle_DH_coffre)
             round_keys_2 = generate_keys(cle_initiale_dh_2)
             hash2 = calcul_hash(1, contenu, cle_DH_coffre)
-            ecrire_log("hashage_coffre", username, chemin_fichier, hash2)           
+            ecrire_log("hashage_coffre", username, new_chemin, hash2)           
             encrypted = cobra_encrypt_message(contenu, round_keys_2)
             encrypted_hex = encrypted.hex()
             if not encrypted_hex:
@@ -356,22 +375,20 @@ def message_encryption(username):
         except Exception as e:
             print(f"Erreur lors de la lecture du fichier : {e}")
             return
-        ecrire_fichier(chemin_fichier, encrypted_hex)
+        ecrire_fichier(new_chemin, encrypted_hex)
         print("Fichier chiffré avec succès.")
         
         confirmation = input("Confirmez-vous le déplacement dans votre répertoire personnel ? (1 pour oui) : ").strip()
         if confirmation != "1":
             print("Opération annulée.")
             return
-
-        chemin_destination = os.path.join(chemin_dossier_client, os.path.basename(chemin_fichier))
-        if deplacer_fichier(chemin_fichier, chemin_destination):
+        nom_sans_extension = os.path.splitext(os.path.basename(chemin_fichier))[0]
+        chemin_destination = os.path.join(chemin_dossier_client, os.path.basename(nom_sans_extension))
+        if deplacer_fichier(new_chemin, chemin_destination):
             confirmation = input("Confirmez-vous le déchiffrement du fichier ? (1 pour oui) : ").strip()
             if confirmation == "1":
                 decrypted = cobra_decrypt_message(encrypted, round_keys)
                 ecrire_fichier(chemin_destination, decrypted)
-                hash = calcul_hash(1, decrypted, cle)
-                ecrire_log("hashage_user", username, chemin_fichier, hash)
                 ecrire_log("recuperation_fichier", username, chemin_fichier)
                 
     else:

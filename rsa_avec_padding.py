@@ -117,32 +117,33 @@ def chiffrer_fichier_par_blocs(chemin_fichier, public_key, chemin_sortie=None):
     return chemin_sortie
 
 
-def dechiffrer_fichier_par_blocs(chemin_fichier_chiffre, private_key, chemin_sortie=None):
+def dechiffrer_fichier_par_blocs(chemin_fichier_chiffre, id_utilisateur):
+    chemin_cle_prive_utilisateur = f"users/{id_utilisateur}/private_key.key"
     # 1) Vérifier que le fichier existe
     if not os.path.exists(chemin_fichier_chiffre):
         print("[ERREUR] Le fichier à déchiffrer n'existe pas ou le chemin est invalide.")
         return
-
     # 2) Vérifier l'extension .enc
     if not chemin_fichier_chiffre.lower().endswith(".enc"):
         print("[ERREUR] Le fichier fourni n'est pas un fichier .enc.")
         return
-
+    private_key = charger_cle_privee(id_utilisateur)
+    if private_key is None:
+        print("Erreur : Impossible de charger les clés.")
+        return 1  # Retourne une erreur explicite si les clés ne sont pas chargées
     n, d = private_key
-    key_size = (n.bit_length() + 7) // 8
 
+    key_size = (n.bit_length() + 7) // 8
     # Déterminer le fichier d'origine
     base_name, ext_enc = os.path.splitext(chemin_fichier_chiffre)
     original_ext = os.path.splitext(base_name)[1]
 
-    if chemin_sortie is None:
-        if original_ext == ".txt":
-            chemin_sortie = base_name + "_dechiffre.txt"
-        else:
-            chemin_sortie = base_name + "_dechiffre.bin"
-
+    #if chemin_sortie is None:
+    #    if original_ext == ".txt":
+    #        chemin_sortie = base_name + "_dechiffre.txt"
+   #     else:
+    #        chemin_sortie = base_name + "_dechiffre.bin"
     data_dechiffree = bytearray()
-
     with open(chemin_fichier_chiffre, "rb") as f_in:
         while True:
             size_bytes = f_in.read(2)
@@ -167,7 +168,8 @@ def dechiffrer_fichier_par_blocs(chemin_fichier_chiffre, private_key, chemin_sor
                 break
 
             data_dechiffree.extend(bloc_clair)
-
+    chemin_sortie = base_name
+    os.remove(chemin_fichier_chiffre)
     with open(chemin_sortie, "wb") as f_out:
         f_out.write(data_dechiffree)
 
@@ -180,14 +182,19 @@ def dechiffrer_fichier_par_blocs(chemin_fichier_chiffre, private_key, chemin_sor
 # 3) GESTION DES CLÉS
 # =========================
 
-def charger_cle_privee(chemin_cle_privee):
-    """
-    Charge une clé privée (n, d) à partir d'un fichier texte.
-    Le fichier doit contenir : "n,d" (sans guillemets).
-    """
-    with open(chemin_cle_privee, "r") as fichier:
-        cle_privee = fichier.read().strip().split(",")
-        return int(cle_privee[0]), int(cle_privee[1])
+def charger_cle_privee(username): 
+    """Charge la clé privée à partir du fichier dans le répertoire de l'utilisateur."""
+    chemin_fichier = os.path.join("users", username, "private_key.key")  # Construire le chemin complet
+    try:
+        with open(chemin_fichier, "r") as f:
+            n, d = map(int, f.read().strip().split(","))  # Lire n et d comme des entiers
+        return (n, d)
+    except FileNotFoundError:
+        print(f"Erreur : Le fichier de la clé privée est introuvable dans {chemin_fichier}.")
+        return None
+    except ValueError:
+        print("Erreur : Format de la clé privée invalide.")
+        return None
 
 
 def charger_cle_publique(chemin_cle_publique):
@@ -228,4 +235,6 @@ def ajouter_fichier_au_coffre(chemin_fichier, id_utilisateur):
     fichier_final = os.path.join(chemin_destination, os.path.basename(fichier_chiffre))
     os.rename(fichier_chiffre, fichier_final)
 
-    print(f"[OK] Fichier ajouté au coffre pour l'utilisateur '{id_utilisateur}': {fichier_final}")
+    os.remove(chemin_fichier)
+
+    print(f"[OK] Fichier chiffré en RSA pour l'utilisateur '{id_utilisateur}': {fichier_final}")

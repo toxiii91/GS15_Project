@@ -3,8 +3,6 @@ from Guillou_Quisquater import ZKP
 from generation_cle import creer_compte  
 from Diffie_Hellman import diffie_hellman
 from certificat_coffre import utilisateur_verifier_certificat
-import rsa_avec_padding
-import cobra
 from log import ecrire_log
 
 

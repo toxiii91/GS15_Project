@@ -3,7 +3,7 @@ from math import gcd
 import shutil
 from log import ecrire_log
 from Merkle import calcul_hash
-from rsa_avec_padding import ajouter_fichier_au_coffre, dechiffrer_fichier_par_blocs
+from RSA import ajouter_fichier_au_coffre, dechiffrer_fichier_par_blocs
 
 # Constantes
 PHI = 0x9E3779B9  # Nombre parfait φ

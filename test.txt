@@ -1,3 +1,0 @@
-ceci est test
-
-ceci est testéé @ test sur les caractères spéciaux ! @ & é" 
